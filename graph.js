@@ -15,6 +15,70 @@ clickme1.onclick=function(){
 }
 
 
+let clickme2= document.getElementById('clickmeQ2');
+clickme2.onclick=function(){
+    console.log("\nData Output from file\n");
+    console.log(data);
+   let root=d3.hierarchy(data);
+    console.log("\nData Output from using d3.heirarchy\n");
+    let arrayData1=storeInArray(root);
+    let arrayData=arrayData1.slice(1,10);
+// set the dimensions and margins of the graph
+var margin = {top: 10, right: 30, bottom: 90, left: 40},
+    width = 460 - margin.left - margin.right,
+    height = 450 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+var svg = d3.select("#my_dataviz")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+// Barplot
+  var x = d3.scaleBand()
+   .range([ 0, width ])
+   .domain(arrayData.map(function(d) { return d.airportName; }))
+   .padding(0.2);
+  svg.append("g")
+   .attr("transform", "translate(0," + height + ")")
+   .call(d3.axisBottom(x))
+   .selectAll("text")
+    .attr("transform", "translate(-10,0)rotate(-45)")
+    .style("text-anchor", "end");
+
+// Add Y axis
+var y = d3.scaleLinear()
+  .domain([0, 500])
+  .range([ height, 0]);
+svg.append("g")
+  .call(d3.axisLeft(y));
+
+// Bars
+svg.selectAll("mybar")
+  .data(arrayData)
+  .enter()
+  .append("rect")
+    .attr("x", function(d) { return x(d.airportName); })
+    .attr("width", x.bandwidth())
+    .attr("fill", "#69b3a2")
+    // no bar at the beginning thus:
+    .attr("height", function(d) { return height - y(0); }) // always equal to 0
+    .attr("y", function(d) { return y(0); })
+
+// Animation
+svg.selectAll("rect")
+  .transition()
+  .duration(800)
+  .attr("y", function(d) { return y(d.speedIASinKnots); })
+  .attr("height", function(d) { return height - y(d.speedIASinKnots); })
+  .delay(function(d,i){console.log(i) ; return(i*100)})
+
+}
+
+
 function storeInArray(root){
     let arrayData=[];
     for(let i=0;i<root.data.length;i++){
@@ -36,54 +100,5 @@ function storeInArray(root){
         }
      }
     return arrayData;
-}
-
-let clickme2= document.getElementById('clickmeQ2');
-clickme2.onclick=function(){
-    console.log("\nData Output from file\n");
-    console.log(data);
-   let root=d3.hierarchy(data);
-    console.log("\nData Output from using d3.heirarchy\n");
-    console.log(root.data[0]['Airport Name']);
-
-// Barplot
-    var x = d3.scaleBand()
-  .range([ 0, width ])
-  .domain(data.map(function(d) { return root.data['Airport Name']; }))
-  .padding(0.2);
-svg.append("g")
-  .attr("transform", "translate(0," + height + ")")
-  .call(d3.axisBottom(x))
-  .selectAll("text")
-    .attr("transform", "translate(-10,0)rotate(-45)")
-    .style("text-anchor", "end");
-
-// Add Y axis
-var y = d3.scaleLinear()
-  .domain([0, 13000])
-  .range([ height, 0]);
-svg.append("g")
-  .call(d3.axisLeft(y));
-
-// Bars
-svg.selectAll("mybar")
-  .data(data)
-  .enter()
-  .append("rect")
-    .attr("x", function(d) { return x(d.Country); })
-    .attr("width", x.bandwidth())
-    .attr("fill", "#69b3a2")
-    // no bar at the beginning thus:
-    .attr("height", function(d) { return height - y(0); }) // always equal to 0
-    .attr("y", function(d) { return y(0); })
-
-// Animation
-svg.selectAll("rect")
-  .transition()
-  .duration(800)
-  .attr("y", function(d) { return y(d.Value); })
-  .attr("height", function(d) { return height - y(d.Value); })
-  .delay(function(d,i){console.log(i) ; return(i*100)})
-
 }
 
