@@ -122,89 +122,56 @@ clickme3.onclick=function(){
     arrayData=storeInArray(root);
     console.log(arrayData);
 
+    // Making Sets
+    let sets=setMaker(arrayData);
+    
+    console.log(sets);
     // set the dimensions and margins of the graph
-var margin = {top: 10, right: 30, bottom: 30, left: 60},
-width = 460 - margin.left - margin.right,
-height = 450 - margin.top - margin.bottom;
+   var margin = {top: 10, right: 30, bottom: 30, left: 60},
+   width = 460 - margin.left - margin.right,
+   height = 450 - margin.top - margin.bottom;
 
-// append the svg object to the body of the page
-var svg = d3.select("#my_dataviz1")
-.append("svg")
-.attr("width", width + margin.left + margin.right)
-.attr("height", height + margin.top + margin.bottom)
-.append("g")
-.attr("transform",
-      "translate(" + margin.left + "," + margin.top + ")");
+  // append the svg object to the body of the page
+  var svg = d3.select("#my_dataviz1")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform",
+           "translate(" + margin.left + "," + margin.top + ")");
 
 
-// Add X axis
-var x = d3.scaleLinear()
-.domain([0, 3000])
-.range([ 0, width ]);
-svg.append("g")
-.attr("transform", "translate(0," + height + ")")
-.call(d3.axisBottom(x));
+    // Add X axis
+    var x = d3.scaleBand()
+    .range([ 0, width ])
+    .domain(arrayData.map(function(d) { return d.originState; }))
+    .padding(0.2);
+   svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+     .attr("transform", "translate(-10,0)rotate(-45)")
+     .style("text-anchor", "end");
 
 // Add Y axis
-var y = d3.scaleLinear()
-.domain([0, 400000])
-.range([ height, 0]);
-svg.append("g")
-.call(d3.axisLeft(y));
-
-// Add a tooltip div. Here I define the general feature of the tooltip: stuff that do not depend on the data point.
-// Its opacity is set to 0: we don't see it by default.
-var tooltip = d3.select("#my_dataviz1")
-.append("div")
-.style("opacity", 0)
-.attr("class", "tooltip")
-.style("background-color", "white")
-.style("border", "solid")
-.style("border-width", "1px")
-.style("border-radius", "5px")
-.style("padding", "10px")
+  var y = d3.scaleBand()
+  .range([ height, 0 ])
+  .domain(arrayData.map(function(d) { if(d.flightDate[1]=='/')
+                                           return d.flightDate[0]
+                                       else
+                                           return `${d.flightDate[0]}${d.flightDate[1]}`
+                                    ; }))
+  .padding(0.5);
+ svg.append("g")
+  .call(d3.axisLeft(y))
+  .selectAll("text")
+   .style("text-anchor", "end");
 
 
-
-// A function that change this tooltip when the user hover a point.
-// Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
-var mouseover = function(d) {
-tooltip
-  .style("opacity", 1)
 }
 
-var mousemove = function(d) {
-tooltip
-  .html("The exact value of<br>the Ground Living area is: " + d.GrLivArea)
-  .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-  .style("top", (d3.mouse(this)[1]) + "px")
-}
 
-// A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
-var mouseleave = function(d) {
-tooltip
-  .transition()
-  .duration(200)
-  .style("opacity", 0)
-}
-
-// Add dots
-svg.append('g')
-.selectAll("dot")
-.data(data.filter(function(d,i){return i<50})) // the .filter part is just to keep a few dots on the chart, not all of them
-.enter()
-.append("circle")
-  .attr("cx", function (d) { return x(d.GrLivArea); } )
-  .attr("cy", function (d) { return y(d.SalePrice); } )
-  .attr("r", 7)
-  .style("fill", "#69b3a2")
-  .style("opacity", 0.3)
-  .style("stroke", "white")
-.on("mouseover", mouseover )
-.on("mousemove", mousemove )
-.on("mouseleave", mouseleave )
-}
-
+//Store data in the form of array and return
 function storeInArray(root){
     let arrayData=[];
     for(let i=0;i<root.data.length;i++){
@@ -226,4 +193,21 @@ function storeInArray(root){
         }
      }
     return arrayData;
+}
+
+//Store on unique values(states,species size, Phase of flight) from array
+function setMaker(arrayData){
+  let sets=[];
+  const date=new Set();
+  const Ssize=new Set();
+  const Pflight=new Set();
+  for(let i=0;i<arrayData.length;i++){
+    date.add(`${arrayData[i].flightDate}`);
+    Ssize.add(arrayData[i].WildlifeSize);
+    Pflight.add(arrayData[i].phaseOfFight);
+  }
+  sets[0]=date;
+  sets[1]=Ssize;
+  sets[2]=Pflight;
+  return sets;
 }
