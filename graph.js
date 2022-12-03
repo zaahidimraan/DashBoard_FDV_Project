@@ -1,5 +1,4 @@
 
-//const data = await d3.json("./flare.json");
 var data = await d3.csv("./birdstrikes.csv");
   
 let clickme1= document.getElementById('clickmeQ1');
@@ -10,25 +9,33 @@ clickme1.onclick=function(){
     console.log("\nData Output from using d3.heirarchy\n");
     console.log(root.data[1001]);
     let arrayData=[];
+    // Storing in array an
+    arrayData=storeInArray(root);
+    console.log(arrayData);
+}
+
+
+function storeInArray(root){
+    let arrayData=[];
     for(let i=0;i<root.data.length;i++){
-       arrayData[i]={
-        airportName:root.data[i]['Airport Name'],
-        aircraftMakeModel:root.data[i]['Aircraft Make Model'],
-        aircraftAirlineOperator:root.data[i]['Aircraft Airline Operator'],
-        costOther:root.data[i]['Cost Other'],
-        costRepair:root.data[i]['Cost Repair'],
-        costTotal:root.data[i]['Cost Total $'],
-        effectAmountofDamage:root.data[i]['Effect Amount of damage'],
-        flightDate:root.data[i]['Flight Date'],
-        originState:root.data[i]['Origin State'],
-        phaseOfFight:root.data[i]['Phase of flight'],
-        speedIASinKnots:root.data[i]['Speed IAS in knots'],
-        Timeofday:root.data[i]['Time of day'],
-        WildlifeSize:root.data[i]['Wildlife Size'],
-        WildlifeSpecies:root.data[i]['Wildlife Species'],
-       }
-    }
-    console.log(arrayData[1001]);
+        arrayData[i]={
+         airportName:root.data[i]['Airport Name'],
+         aircraftMakeModel:root.data[i]['Aircraft Make Model'],
+         aircraftAirlineOperator:root.data[i]['Aircraft Airline Operator'],
+         costOther:root.data[i]['Cost Other'],
+         costRepair:root.data[i]['Cost Repair'],
+         costTotal:root.data[i]['Cost Total $'],
+         effectAmountofDamage:root.data[i]['Effect Amount of damage'],
+         flightDate:root.data[i]['Flight Date'],
+         originState:root.data[i]['Origin State'],
+         phaseOfFight:root.data[i]['Phase of flight'],
+         speedIASinKnots:root.data[i]['Speed IAS in knots'],
+         Timeofday:root.data[i]['Time of day'],
+         WildlifeSize:root.data[i]['Wildlife Size'],
+         WildlifeSpecies:root.data[i]['Wildlife Species'],
+        }
+     }
+    return arrayData;
 }
 
 let clickme2= document.getElementById('clickmeQ2');
