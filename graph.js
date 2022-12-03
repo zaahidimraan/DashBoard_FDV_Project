@@ -37,7 +37,7 @@ var svg = d3.select("#my_dataviz")
 // Barplot
   var x = d3.scaleBand()
    .range([ 0, width ])
-   .domain(arrayData.map(function(d) { return d.flightDate; }))
+   .domain(arrayData.map(function(d) { return d.airportName; }))
    .padding(0.2);
   svg.append("g")
    .attr("transform", "translate(0," + height + ")")
@@ -52,6 +52,8 @@ var y = d3.scaleLinear()
   .range([ height, 0]);
 svg.append("g")
   .call(d3.axisLeft(y));
+
+
 
   // create a tooltip
   var Tooltip = d3.select("#my_dataviz")
@@ -74,7 +76,7 @@ svg.append("g")
   }
   var mousemove = function(d) {
     Tooltip
-      .html("The exact value of<br>this cell is: " + d.airportName)
+      .html("The exact value of<br>this cell is: " + d.speedIASinKnots)
       .style("left", (d3.mouse(this)[0]+70) + "px")
       .style("top", (d3.mouse(this)[1]) + "px")
   }
@@ -91,12 +93,16 @@ svg.selectAll("mybar")
   .data(arrayData)
   .enter()
   .append("rect")
-    .attr("x", function(d) { return x(d.flightDate); })
+    .attr("x", function(d) { return x(d.airportName); })
     .attr("width", x.bandwidth())
-    .attr("fill", "#69b3a2")
+    .attr("fill", "red")
     // no bar at the beginning thus:
     .attr("height", function(d) { return height - y(0); }) // always equal to 0
     .attr("y", function(d) { return y(0); })
+  .on("mouseover", mouseover)
+  .on("mousemove", mousemove)
+  .on("mouseleave", mouseleave)
+
 
 // Animation
 svg.selectAll("rect")
@@ -105,9 +111,7 @@ svg.selectAll("rect")
   .attr("y", function(d) { return y(d.speedIASinKnots); })
   .attr("height", function(d) { return height - y(d.speedIASinKnots); })
   .delay(function(d,i){console.log(i) ; return(i*100)})
-  .on("mouseover", mouseover)
-  .on("mousemove", mousemove)
-  .on("mouseleave", mouseleave)
+
 
 }
 
