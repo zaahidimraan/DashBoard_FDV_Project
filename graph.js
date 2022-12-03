@@ -203,6 +203,12 @@ clickme3.onclick=function(){
      .style("opacity", 0)
    }
 
+// Color scale: give me a specie name, I return a color
+console.log(sets[2]);
+var color = d3.scaleOrdinal()
+.domain(sets[1])
+.range([ "#F8766D", "#00BA38", "#619CFF","yellow","pink","purple","green"])
+
 // Add dots
 svg.append('g')
 .selectAll("dot")
@@ -212,8 +218,8 @@ svg.append('g')
   .attr("cx", function (d) { return x(d.originState); } )
   .attr("cy", function (d) { return y(d.flightDate[1]=='/'?d.flightDate[0]:`${d.flightDate[0]}${d.flightDate[1]}`); } )
   .attr("r", function(d){ return (d.WildlifeSize=='Large'?15:(d.WildlifeSize=='Medium'?7:2))})
-  .style("fill", "#69b3a2")
-  .style("opacity", 0.3)
+  .style("fill", color)
+  .style("opacity", function(d){ return (d.WildlifeSize=='Large'?.3:(d.WildlifeSize=='Medium'?.6:.9))})
   .style("stroke", "white")
 .on("mouseover", mouseover )
 .on("mousemove", mousemove )
