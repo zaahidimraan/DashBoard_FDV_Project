@@ -126,13 +126,15 @@ clickme3.onclick=function(){
     let sets=setMaker(arrayData);
 
     let arrayData1=[]
-    for(let i=0;i<100;i++){
-      if(arrayData[i].flightDate[1]=='/')
-        arrayData1[i]=arrayData[i];
+    for(let i=0,j=0;i<100;i++){
+      if(arrayData[i].flightDate[0]=='6'){
+        arrayData1[j]=arrayData[i];
+        j++;
+      }
     }
     arrayData=arrayData1;
     
-    console.log(sets);
+    console.log(arrayData);
     // set the dimensions and margins of the graph
    var margin = {top: 10, right: 30, bottom: 60, left: 60},
    width = 1200 - margin.left - margin.right,
@@ -161,7 +163,7 @@ clickme3.onclick=function(){
     var x = d3.scaleBand()
     .range([ 0, width ])
     .domain(arrayData.map(function(d) { return d.originState; }))
-    .padding(0.2);
+    .padding(1);
    svg.append("g")
     .attr("transform", "translate(0," + height + ")")
     .call(d3.axisBottom(x))
@@ -174,7 +176,7 @@ clickme3.onclick=function(){
     .range([ height, 0 ])
     .domain(arrayData.map(function(d) { return d.flightDate;
                                      }))
-    .padding(0.5);
+    .padding(1);
    svg.append("g")
     .call(d3.axisLeft(y).tickSize(-width*1.3).ticks(7))
     .select(".domain").remove()
@@ -234,8 +236,8 @@ svg.append('g')
 .data(arrayData) 
 .enter()
 .append("circle")
-  .attr("cx", function (d) { return x(d.originState)+18; } )
-  .attr("cy", function (d) { return y(d.flightDate)+1.5; } )
+  .attr("cx", function (d) { return x(d.originState); } )
+  .attr("cy", function (d) { return y(d.flightDate); } )
   .attr("r", function(d){ return (d.WildlifeSize=='Large'?15:(d.WildlifeSize=='Medium'?7:2))})
   .style("fill", color)
   .style("opacity", function(d){ return (d.WildlifeSize=='Large'?.3:(d.WildlifeSize=='Medium'?.6:.9))})
