@@ -139,7 +139,7 @@ function scatterPlotLoading(){
     let year=document.getElementById("sometext1").value;
     let length=arrayData.length;
     console.log(value[0]);
-    for(let i=0,j=0;i<3000;i++){
+    for(let i=0,j=0;i<arrayData.length;i++){
       let length=arrayData[i].flightDate.length;
       length=length-1;
       if((value == '')&&(year=='')) {
@@ -320,7 +320,7 @@ function circularPlotLoading(){
   let year=document.getElementById("sometext1").value;
   let length=arrayData.length;
   console.log(value[0]);
-  for(let i=0,j=0;i<3000;i++){
+  for(let i=0,j=0;i<arrayData.length;i++){
     let length=arrayData[i].flightDate.length;
     length=length-1;
     if((value == '')&&(year=='')) {
