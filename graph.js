@@ -136,22 +136,24 @@ function scatterPlotLoading(){
     let sets=setMaker(arrayData);
 
     let arrayData1=[]
-    for(let i=0,j=0;i<100;i++){
-      if(document.getElementById("sometext").value == '') {
-        if('1'==arrayData[i].flightDate[0]){
+    let value=document.getElementById("sometext").value;
+    console.log(value[0]);
+    for(let i=0,j=0;i<1000;i++){
+      if(value == '') {
+        if(('1'==arrayData[i].flightDate[0])&&(('/'==arrayData[i].flightDate[1]))){
           arrayData1[j]=arrayData[i];
           j++;
          }
        }
-      else if(document.getElementById("sometext").value[1] == '/'){
-         if(document.getElementById("sometext").value[0]==arrayData[i].flightDate[0]){
+      else if((arrayData[i].flightDate[1] === '/')&&(value.length==1)){
+         if(value[0]==arrayData[i].flightDate[0]){
           arrayData1[j]=arrayData[i];
           j++;
           console.log("Zahid");
          }
         }
-      else{
-        if(document.getElementById("sometext").value[1]==arrayData[i].flightDate[1]){
+      else if(value.length==2){
+        if(value[1]==arrayData[i].flightDate[1]){
           arrayData1[j]=arrayData[i];
           j++;
          }
@@ -162,7 +164,7 @@ function scatterPlotLoading(){
     // set the dimensions and margins of the graph
    var margin = {top: 10, right: 30, bottom: 60, left: 60},
    width = 1200 - margin.left - margin.right,
-   height = 750 - margin.top - margin.bottom;
+   height = 1750 - margin.top - margin.bottom;
 
   // append the svg object to the body of the page
   var svg = d3.select("#my_dataviz1")
@@ -505,3 +507,10 @@ dataLoading();
 //barPlotLoading();
 scatterPlotLoading();
 circularPlotLoading();
+
+
+
+
+
+
+                
