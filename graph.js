@@ -125,7 +125,6 @@ svg.selectAll("rect")
 let clickme3= document.getElementById('clickmeQ3');
 function scatterPlotLoading(){
    console.log("Zahid");
-   console.log($("#slider-range").value);
    let root=d3.hierarchy(data);
    let arrayData=[];
     // Storing in an array 
@@ -137,23 +136,27 @@ function scatterPlotLoading(){
 
     let arrayData1=[]
     let value=document.getElementById("sometext").value;
+    let year=document.getElementById("sometext1").value;
+    let length=arrayData.length;
     console.log(value[0]);
     for(let i=0,j=0;i<3000;i++){
-      if(value == '') {
+      let length=arrayData[i].flightDate.length;
+      length=length-1;
+      if((value == '')&&(year=='')) {
         if(('1'==arrayData[i].flightDate[0])&&(('/'==arrayData[i].flightDate[1]))){
           arrayData1[j]=arrayData[i];
           j++;
          }
        }
       else if((arrayData[i].flightDate[1] === '/')&&(value.length==1)){
-         if(value[0]==arrayData[i].flightDate[0]){
+         if((value[0]==arrayData[i].flightDate[0])&&(year[3]==arrayData[i].flightDate[length])){
           arrayData1[j]=arrayData[i];
           j++;
           console.log("Zahid");
          }
         }
       else if(value.length==2){
-        if(value[1]==arrayData[i].flightDate[1]){
+        if((value[1]==arrayData[i].flightDate[1])&&(year[3]==arrayData[i].flightDate[length])){
           arrayData1[j]=arrayData[i];
           j++;
          }
@@ -312,30 +315,34 @@ function circularPlotLoading(){
   let arrayData=[];
    // Storing in an array 
   arrayData=storeInArray(root);
-  let arrayData1=[]
+  let arrayData1=[];
   let value=document.getElementById("sometext").value;
-    console.log(value[0]);
-    for(let i=0,j=0;i<3000;i++){
-      if(value == '') {
-        if(('1'==arrayData[i].flightDate[0])&&(('/'==arrayData[i].flightDate[1]))){
-          arrayData1[j]=arrayData[i];
-          j++;
-         }
+  let year=document.getElementById("sometext1").value;
+  let length=arrayData.length;
+  console.log(value[0]);
+  for(let i=0,j=0;i<3000;i++){
+    let length=arrayData[i].flightDate.length;
+    length=length-1;
+    if((value == '')&&(year=='')) {
+      if(('1'==arrayData[i].flightDate[0])&&(('/'==arrayData[i].flightDate[1]))){
+        arrayData1[j]=arrayData[i];
+        j++;
        }
-      else if((arrayData[i].flightDate[1] === '/')&&(value.length==1)){
-         if(value[0]==arrayData[i].flightDate[0]){
-          arrayData1[j]=arrayData[i];
-          j++;
-          console.log("Zahid");
-         }
-        }
-      else if(value.length==2){
-        if(value[1]==arrayData[i].flightDate[1]){
-          arrayData1[j]=arrayData[i];
-          j++;
-         }
+     }
+    else if((arrayData[i].flightDate[1] === '/')&&(value.length==1)){
+       if((value[0]==arrayData[i].flightDate[0])&&(year[3]==arrayData[i].flightDate[length])){
+        arrayData1[j]=arrayData[i];
+        j++;
+        console.log("Zahid");
+       }
       }
+    else if(value.length==2){
+      if((value[1]==arrayData[i].flightDate[1])&&(year[3]==arrayData[i].flightDate[length])){
+        arrayData1[j]=arrayData[i];
+        j++;
+       }
     }
+  }
   arrayData=arrayData1;
   console.log(arrayData);
   // set the dimensions and margins of the graph
@@ -474,6 +481,119 @@ svg.selectAll("mylabels")
 
 }
 
+function TreeMapping(){
+
+  console.log(data);
+  let arrayData=[];
+   // Storing in an array 
+  arrayData=storeInArray(root);
+  let arrayData1=[]
+  for(let i=0;i<1000;i++){
+    arrayData1[i]=arrayData[i];
+  }
+  arrayData=arrayData1;
+  console.log(arrayData);
+  // set the dimensions and margins of the graph
+var width = 1150
+var height = 950
+
+// append the svg object to the body of the page
+var svg = d3.select("#my_dataviz3")
+  .append("svg")
+    .attr("width", 1000)
+    .attr("height", 450)
+            
+  for(let i = 0; i < 0; i++)
+  {
+  console.log(loadedData[i]);  //printing data groups separately
+    let originState = arrayData[i].originState;
+    data[0].push(originState);
+    let airportName = arrayData[i].airportName;
+    data[1].push(airportName);           
+    }
+    data[0] = loadedData;
+    console.log(data);  
+        
+    let groups = d3.rollup(loadedData, // rollup function to group the data by any of the categorical properties
+    function(d) { return d.length; },
+    function(d) { return d.Distributor; },
+    function(d) { return d.Genre; },
+    );
+
+    console.log(groups);
+    let root = d3.hierarchy(groups);
+    root.sum(function(d) {
+        return d[1];
+    });
+console.log(root);
+// tree, cluster, treemap, pack and partition layouts. Note that treemap, pack and 
+// partition are designed to lay out hierarchies where the nodes have an associated numeric value (e.g. revenue, population etc.).
+    let treeLayout = d3.tree()
+        .size([700, 220])
+    treeLayout(root)
+    // create it with any other layout
+
+    // let clusterLayout = d3.cluster()
+    //     .size([700, 220])
+    // clusterLayout(root)
+
+    // let treemapLayout = d3.treemap()
+    //     .size([700, 220])
+    // treemapLayout(root)
+
+
+
+    // let packLayout = d3.pack()
+    //     .size([960,450])
+    // packLayout(root)
+
+
+    console.log("These are root descendents",root.descendants())
+
+    // Links
+    d3.select('svg g')
+        .selectAll('line')
+        .data(root.links())
+        .join('line')
+        .attr('x1', function(d) {return d.source.x;})
+        .attr('y1', function(d) {return d.source.y;})
+        .attr('x2', function(d) {return d.target.x;})
+        .attr('y2', function(d) {return d.target.y;});
+
+    // Nodes
+    d3.select('svg g')
+        .selectAll('circle')
+        .data(root.descendants())
+        .join('circle')
+        .attr('cx', function(d) {return d.x;})
+        .attr('cy', function(d) {return d.y;})
+        .attr('r', 4);
+
+    // Labels
+    d3.select('svg g')
+        .selectAll('text.label')
+        .data(root.descendants())
+        .join('text')
+        .classed('label', true)
+        .attr('x', function(d) {return d.x;})
+        .attr('y', function(d) {return d.y - 10;})
+        .text(function(d) {
+            return d.data[0];
+        });
+
+    // Leaf count labels
+    d3.select('svg g')
+        .selectAll('text.count-label')
+        .data(root.descendants())
+        .join('text')
+        .classed('count-label', true)
+        .attr('x', function(d) {return d.x;})
+        .attr('y', function(d) {return d.y + 20;})
+        .text(function(d) {
+            if (d.height > 0) return '';
+            return d.data[1];
+        });
+  }
 //Store data in the form of array and return
 function storeInArray(root){
     let arrayData=[];
@@ -515,9 +635,10 @@ function setMaker(arrayData){
   return sets;
 }
 
-let check= document.getElementById('check');
-check.onclick=function(){
-  console.log("Zahid");
+let check= document.getElementById('sometext');
+check.oninput=function(){
+  let val=document.getElementById("sometext").value+"/"+document.getElementById("sometext1").value;
+  document.getElementById("rangeValue").innerHTML=val;
   $("#my_dataviz1").remove();
   $("#my_dataviz2").remove();
   $("#my_dataSpace1").append("<div id=\"my_dataviz1\"></div>")  
@@ -526,11 +647,24 @@ check.onclick=function(){
   circularPlotLoading();
 }
 
+let check1= document.getElementById('sometext1');
+check1.oninput=function(){
+  let val=document.getElementById("sometext").value+"/"+document.getElementById("sometext1").value;
+  document.getElementById("rangeValue").innerHTML=val;
+  $("#my_dataviz1").remove();
+  $("#my_dataviz2").remove();
+  $("#my_dataSpace1").append("<div id=\"my_dataviz1\"></div>")  
+  $("#my_dataSpace1").append("<div id=\"my_dataviz2\"></div>")
+  scatterPlotLoading();
+  circularPlotLoading();
+}
+
+
 dataLoading();
 //barPlotLoading();
 scatterPlotLoading();
-circularPlotLoading();
-
+//circularPlotLoading();
+//TreeMapping();
 
 
 

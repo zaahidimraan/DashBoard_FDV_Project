@@ -5,7 +5,66 @@
     <meta charset="UTF-8" />
     <meta name="viewport" path1tent="width=device-width,initial-scale=1.0" />
     <!-- Load d3.js -->
-    <style src="./D3Style.css" type="style"></style>     
+    <style>
+
+.slider1 {
+  position:absolute;
+  top:55%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:500px;
+  height:10px;
+  padding:30px;
+  padding-left: 40px;
+  background:#fcfcfc;
+  border-radius:20px;
+  display:flex;
+  align-items:center;
+  box-shadow:0px 15px 40px #7E6D5766;
+ }
+      .slider {
+  position:absolute;
+  top:65%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:500px;
+  height:10px;
+  padding:30px;
+  padding-left: 40px;
+  background:#fcfcfc;
+  border-radius:20px;
+  display:flex;
+  align-items:center;
+  box-shadow:0px 15px 40px #7E6D5766;
+ }
+ .slider p {
+  font-size:26px;
+  font-weight:600;
+  font-family: Open Sans;
+  padding-left:30px;
+  color:#7E6D57;
+ }
+ .slider input[type=”range”] {
+  -webkit-appearance:none !important;
+  width:420px;
+  height:2px;
+  background:#7E6D57;
+  border:none;
+  outline:none;
+ }
+ .slider input[type=”range”]::-webkit-slider-thumb {
+  -webkit-appearance:none !important;
+  width:30px;
+  height:30px;
+  background:#fcfcfc;
+  border:2px solid #7E6D57;
+  border-radius:50%;
+  cursor:pointer;
+ }
+ .slider input[type=”range”]::-webkit-slider-thumb:hover {
+  background:#7E6D57;
+ }
+    </style>     
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 </head>
@@ -32,27 +91,29 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
     <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
-    <p>
-      <label for="amount">Date range:</label>
-      <input type="text" id="amount" style="border: 0; color: #f6931f; font-weight: bold;" size="100" />
-    </p>
-    <div id="slider-range"></div>
-    <!-- Create a div where the graph will take place barplot-->
-    <div id="my_dataviz"></div>
-    <input type="text" id="sometext" value=""> 
-    <input type="button" id="check" onclick="check();" value="Enter the month of which you want to see data">
+    
+    <!--Line for Month Selection-->
+    
+    <div class="slider">
+      <label for="sometext">Month    </label>
+      <input type="range" min="1" max="12" value="5"   id="sometext">
+      <label for="sometext1">Year</label>
+      <input type="range" min="1990" max="1994" value="1991"   id="sometext1">
+      <p id="rangeValue">5/1991</p>
+    </div>
+
     <h2>Graph Description for Scatter Plot</h2>
     <h4>Y-axis :: Date</h4>
     <h4>X-axis :: State</h4>
     <h4>Size :: Size of Species</h4>
     <h4>Color :: Phase of Flight</h4>
-    <!-- Create a div where the graph will take place for scatter blot-->
+    <!-- Create a div where the graph will take place for plots-->
     <div id="my_dataSpace1" >
       <div id="my_dataviz1"></div>
-    <!-- Create a div where the graph will take place for circular plot-->
       <div id="my_dataviz2"></div>
+      <div id="my_dataviz3"></div>
     </div>
-
+   
 </body>
   
 </html>
