@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" path1tent="width=device-width,initial-scale=1.0" />
-     <style src="./D3Style.css" type="style"></style>     
+    <!-- Load d3.js -->
+    <style src="./D3Style.css" type="style"></style>     
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-    <!-- Load d3.js -->
 </head>
   
 <body>
@@ -37,12 +37,17 @@
       <input type="text" id="amount" style="border: 0; color: #f6931f; font-weight: bold;" size="100" />
     </p>
     <div id="slider-range"></div>
-    <!-- Create a div where the graph will take place -->
+    <!-- Create a div where the graph will take place barplot-->
     <div id="my_dataviz"></div>
-    <!-- Create a div where the graph will take place for q3-->
-    <div id="my_dataviz1"></div>
-    <!-- Create a div where the graph will take place for q3-->
-    <div id="my_dataviz2"></div>
+    <input type="text" id="sometext" value=""> 
+    <input type="button" id="check" onclick="check();" value="Check if empty">
+    
+    <!-- Create a div where the graph will take place for scatter blot-->
+    <div id="my_dataSpace1" >
+      <div id="my_dataviz1"></div>
+    </div>
+    <!-- Create a div where the graph will take place for circular plot-->
+    <div id="my_dataviz2" style="width:100px;float:left"></div>
 
 </body>
   

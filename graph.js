@@ -253,7 +253,7 @@ svg.selectAll("mydots")
   .data(keys)
   .enter()
   .append("rect")
-    .attr("x", 1000)
+    .attr("x", 1120)
     .attr("y", function(d,i){ return 400 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
     .attr("width", size)
     .attr("height", size)
@@ -264,7 +264,7 @@ svg.selectAll("mylabels")
   .data(keys)
   .enter()
   .append("text")
-    .attr("x", 1000 + size*1.2)
+    .attr("x", 1010 + size*1.2)
     .attr("y", function(d,i){ return 400 + i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
     .style("fill", function(d){ return color(d)})
     .text(function(d){ return d})
@@ -303,24 +303,24 @@ function circularPlotLoading(){
   arrayData=arrayData1;
   console.log(arrayData);
   // set the dimensions and margins of the graph
-var width = 450
+var width = 850
 var height = 450
 
 // append the svg object to the body of the page
 var svg = d3.select("#my_dataviz2")
   .append("svg")
-    .attr("width", 1450)
+    .attr("width", 1000)
     .attr("height", 450)
 
  // A scale that gives a X target position for each group
  var x = d3.scaleOrdinal()
   .domain(["Night", "Day","Dawn","Dusk"])
-  .range([50, 350,650,850])
+  .range([50, 250,450,650])
 
  // A color scale
  var color = d3.scaleOrdinal()
   .domain(["Night", "Day","Dawn","Dusk"])
-  .range([ "#F8766D", "#00BA38","green","yellow"])
+  .range([ "blue", "red","purple","green"])
 
  // Initialize the circle: all located at the center of the svg area
  var node = svg.append("g")
@@ -328,13 +328,13 @@ var svg = d3.select("#my_dataviz2")
   .data(arrayData)
   .enter()
   .append("circle")
-    .attr("r", 29)
+    .attr("r", 5)
     .attr("cx", width / 2)
     .attr("cy", height / 2)
     .style("fill", function(d){ return color(d.Timeofday)})
     .style("fill-opacity", 0.8)
     .attr("stroke", "black")
-    .style("stroke-width", 4)
+    .style("stroke-width", 2)
     .call(d3.drag() // call specific function when circle is dragged
          .on("start", dragstarted)
          .on("drag", dragged)
@@ -342,11 +342,11 @@ var svg = d3.select("#my_dataviz2")
 
  // Features of the forces applied to the nodes:
  var simulation = d3.forceSimulation()
-    .force("x", d3.forceX().strength(0.5).x( function(d){ return x(d.Timeofday) } ))
-    .force("y", d3.forceY().strength(0.1).y( height/2 ))
+    .force("x", d3.forceX().strength(6.5).x( function(d){ return x(d.Timeofday) } ))
+    .force("y", d3.forceY().strength(3.1).y( height/2 ))
     .force("center", d3.forceCenter().x(width / 2).y(height / 2)) // Attraction to the center of the svg area
-    .force("charge", d3.forceManyBody().strength(1)) // Nodes are attracted one each other of value is > 0
-    .force("collide", d3.forceCollide().strength(.1).radius(32).iterations(1)) // Force that avoids circle overlapping
+    .force("charge", d3.forceManyBody().strength(6)) // Nodes are attracted one each other of value is > 0
+    .force("collide", d3.forceCollide().strength(.1).radius(15).iterations(1)) // Force that avoids circle overlapping
 
 // Apply these forces to the nodes and update their positions.
 // Once the force algorithm is happy with positions ('alpha' value is low enough), simulations will stop.
@@ -373,6 +373,68 @@ var svg = d3.select("#my_dataviz2")
   d.fx = null;
   d.fy = null;
  }
+
+// A function that change this tooltip when the user hover a point.
+// Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
+var mouseover = function(d) {
+  tooltip
+   .style("opacity", 1)
+ }
+
+ var mousemove = function(d) {
+  tooltip
+   .html("State Name :: " + d.originState+"<br> Date       :: "+d.flightDate+"<br> Species Size :: "+d.WildlifeSize+"<br>Phase of Flight ::"+d.phaseOfFight)
+   .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+   .style("top", (d3.mouse(this)[1]) + "px")
+ }
+
+ // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+ var mouseleave = function(d) {
+  tooltip
+    .transition()
+    .duration(200)
+    .style("opacity", 0)
+  }
+
+const setTimeofday=new Set();
+for(let i=0;i<arrayData.length;i++){
+ setTimeofday.add(arrayData[i].Timeofday);
+}
+var keys=[];
+for(const element of setTimeofday){
+ keys.push(element);
+ console.log(element);
+}
+// Usually you have a color scale in your chart already
+var color = d3.scaleOrdinal()
+ .domain(keys)
+ .range(d3.schemeSet1);
+
+
+
+// Add one dot in the legend for each name.
+var size = 20
+svg.selectAll("mydots")
+  .data(keys)
+  .enter()
+  .append("rect")
+    .attr("x", 50)
+    .attr("y", function(d,i){ return 300 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("width", size)
+    .attr("height", size)
+    .style("fill", function(d){ return color(d)})
+
+// Add one dot in the legend for each name.
+svg.selectAll("mylabels")
+  .data(keys)
+  .enter()
+  .append("text")
+    .attr("x", 50 + size*1.2)
+    .attr("y", function(d,i){ return 300 + i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
+    .style("fill", function(d){ return color(d)})
+    .text(function(d){ return d})
+    .attr("text-anchor", "left")
+    .style("alignment-baseline", "middle");
 
 }
 
@@ -415,6 +477,14 @@ function setMaker(arrayData){
   sets[1]=Ssize;
   sets[2]=Pflight;
   return sets;
+}
+
+let check= document.getElementById('check');
+check.onclick=function(){
+  console.log("Zahid");
+  $("#my_dataviz1").remove();
+  $("#my_dataSpace1").append("<div id=\"my_dataviz1\"></div>")
+  scatterPlotLoading();
 }
 
 
