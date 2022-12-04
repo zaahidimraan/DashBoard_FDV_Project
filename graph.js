@@ -138,7 +138,7 @@ function scatterPlotLoading(){
     let arrayData1=[]
     let value=document.getElementById("sometext").value;
     console.log(value[0]);
-    for(let i=0,j=0;i<1000;i++){
+    for(let i=0,j=0;i<3000;i++){
       if(value == '') {
         if(('1'==arrayData[i].flightDate[0])&&(('/'==arrayData[i].flightDate[1]))){
           arrayData1[j]=arrayData[i];
@@ -270,7 +270,7 @@ svg.selectAll("mydots")
   .enter()
   .append("rect")
     .attr("x", 1120)
-    .attr("y", function(d,i){ return 400 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("y", function(d,i){ return 50 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
     .attr("width", size)
     .attr("height", size)
     .style("fill", function(d){ return color(d)})
@@ -281,7 +281,7 @@ svg.selectAll("mylabels")
   .enter()
   .append("text")
     .attr("x", 1010 + size*1.2)
-    .attr("y", function(d,i){ return 400 + i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("y", function(d,i){ return 50 + i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
     .style("fill", function(d){ return color(d)})
     .text(function(d){ return d})
     .attr("text-anchor", "left")
@@ -313,9 +313,29 @@ function circularPlotLoading(){
    // Storing in an array 
   arrayData=storeInArray(root);
   let arrayData1=[]
-  for(let i=0;i<100;i++){
-    arrayData1[i]=arrayData[i];
-  }
+  let value=document.getElementById("sometext").value;
+    console.log(value[0]);
+    for(let i=0,j=0;i<3000;i++){
+      if(value == '') {
+        if(('1'==arrayData[i].flightDate[0])&&(('/'==arrayData[i].flightDate[1]))){
+          arrayData1[j]=arrayData[i];
+          j++;
+         }
+       }
+      else if((arrayData[i].flightDate[1] === '/')&&(value.length==1)){
+         if(value[0]==arrayData[i].flightDate[0]){
+          arrayData1[j]=arrayData[i];
+          j++;
+          console.log("Zahid");
+         }
+        }
+      else if(value.length==2){
+        if(value[1]==arrayData[i].flightDate[1]){
+          arrayData1[j]=arrayData[i];
+          j++;
+         }
+      }
+    }
   arrayData=arrayData1;
   console.log(arrayData);
   // set the dimensions and margins of the graph
@@ -499,8 +519,11 @@ let check= document.getElementById('check');
 check.onclick=function(){
   console.log("Zahid");
   $("#my_dataviz1").remove();
-  $("#my_dataSpace1").append("<div id=\"my_dataviz1\"></div>")
+  $("#my_dataviz2").remove();
+  $("#my_dataSpace1").append("<div id=\"my_dataviz1\"></div>")  
+  $("#my_dataSpace1").append("<div id=\"my_dataviz2\"></div>")
   scatterPlotLoading();
+  circularPlotLoading();
 }
 
 dataLoading();
