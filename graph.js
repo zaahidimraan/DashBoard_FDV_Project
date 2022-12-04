@@ -227,6 +227,92 @@ svg.append('g')
 
 }
 
+let clickme4= document.getElementById('clickmeQ4');
+clickme4.onclick=function(){
+  let root=d3.hierarchy(data);
+  console.log(data);
+  let arrayData=[];
+   // Storing in an array 
+  arrayData=storeInArray(root);
+  let arrayData1=[]
+  for(let i=0;i<100;i++){
+    arrayData1[i]=arrayData[i];
+  }
+  arrayData=arrayData1;
+  console.log(arrayData);
+  // set the dimensions and margins of the graph
+var width = 450
+var height = 450
+
+// append the svg object to the body of the page
+var svg = d3.select("#my_dataviz2")
+  .append("svg")
+    .attr("width", 1450)
+    .attr("height", 450)
+
+ // A scale that gives a X target position for each group
+ var x = d3.scaleOrdinal()
+  .domain(["Night", "Day","Dawn","Dusk"])
+  .range([50, 350,650,850])
+
+ // A color scale
+ var color = d3.scaleOrdinal()
+  .domain(["Night", "Day","Dawn","Dusk"])
+  .range([ "#F8766D", "#00BA38","green","yellow"])
+
+ // Initialize the circle: all located at the center of the svg area
+ var node = svg.append("g")
+  .selectAll("circle")
+  .data(arrayData)
+  .enter()
+  .append("circle")
+    .attr("r", 29)
+    .attr("cx", width / 2)
+    .attr("cy", height / 2)
+    .style("fill", function(d){ return color(d.Timeofday)})
+    .style("fill-opacity", 0.8)
+    .attr("stroke", "black")
+    .style("stroke-width", 4)
+    .call(d3.drag() // call specific function when circle is dragged
+         .on("start", dragstarted)
+         .on("drag", dragged)
+         .on("end", dragended));
+
+ // Features of the forces applied to the nodes:
+ var simulation = d3.forceSimulation()
+    .force("x", d3.forceX().strength(0.5).x( function(d){ return x(d.Timeofday) } ))
+    .force("y", d3.forceY().strength(0.1).y( height/2 ))
+    .force("center", d3.forceCenter().x(width / 2).y(height / 2)) // Attraction to the center of the svg area
+    .force("charge", d3.forceManyBody().strength(1)) // Nodes are attracted one each other of value is > 0
+    .force("collide", d3.forceCollide().strength(.1).radius(32).iterations(1)) // Force that avoids circle overlapping
+
+// Apply these forces to the nodes and update their positions.
+// Once the force algorithm is happy with positions ('alpha' value is low enough), simulations will stop.
+ simulation
+    .nodes(arrayData)
+    .on("tick", function(d){
+      node
+          .attr("cx", function(d){ return d.x; })
+          .attr("cy", function(d){ return d.y; })
+    });
+
+// What happens when a circle is dragged?
+ function dragstarted(d) {
+  if (!d3.event.active) simulation.alphaTarget(.03).restart();
+  d.fx = d.x;
+  d.fy = d.y;
+ }
+ function dragged(d) {
+  d.fx = d3.event.x;
+  d.fy = d3.event.y;
+ }
+ function dragended(d) {
+  if (!d3.event.active) simulation.alphaTarget(.03);
+  d.fx = null;
+  d.fy = null;
+ }
+
+}
 
 //Store data in the form of array and return
 function storeInArray(root){
