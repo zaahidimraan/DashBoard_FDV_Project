@@ -137,11 +137,11 @@ function scatterPlotLoading(){
     let arrayData1=[]
     let value=document.getElementById("sometext").value;
     let year=document.getElementById("sometext1").value;
-    let length=arrayData.length;
-    console.log(value[0]);
     for(let i=0,j=0;i<arrayData.length;i++){
       let length=arrayData[i].flightDate.length;
       length=length-1;
+      let length1=length;
+      length1=length1-1;
       if((value == '')&&(year=='')) {
         if(('1'==arrayData[i].flightDate[0])&&(('/'==arrayData[i].flightDate[1]))){
           arrayData1[j]=arrayData[i];
@@ -149,14 +149,13 @@ function scatterPlotLoading(){
          }
        }
       else if((arrayData[i].flightDate[1] === '/')&&(value.length==1)){
-         if((value[0]==arrayData[i].flightDate[0])&&(year[3]==arrayData[i].flightDate[length])){
+         if((value[0]==arrayData[i].flightDate[0])&&(year[3]==arrayData[i].flightDate[length])&&(year[2]==arrayData[i].flightDate[length1])){
           arrayData1[j]=arrayData[i];
           j++;
-          console.log("Zahid");
          }
         }
       else if(value.length==2){
-        if((value[1]==arrayData[i].flightDate[1])&&(year[3]==arrayData[i].flightDate[length])){
+        if((value[1]==arrayData[i].flightDate[1])&&(year[3]==arrayData[i].flightDate[length])&&(year[2]==arrayData[i].flightDate[length1])){
           arrayData1[j]=arrayData[i];
           j++;
          }
@@ -167,7 +166,7 @@ function scatterPlotLoading(){
     // set the dimensions and margins of the graph
    var margin = {top: 10, right: 30, bottom: 60, left: 60},
    width = 1200 - margin.left - margin.right,
-   height = 1750 - margin.top - margin.bottom;
+   height = 600 - margin.top - margin.bottom;
 
   // append the svg object to the body of the page
   var svg = d3.select("#my_dataviz1")
@@ -318,11 +317,11 @@ function circularPlotLoading(){
   let arrayData1=[];
   let value=document.getElementById("sometext").value;
   let year=document.getElementById("sometext1").value;
-  let length=arrayData.length;
-  console.log(value[0]);
   for(let i=0,j=0;i<arrayData.length;i++){
     let length=arrayData[i].flightDate.length;
     length=length-1;
+    let length1=length;
+    length1=length1-1;
     if((value == '')&&(year=='')) {
       if(('1'==arrayData[i].flightDate[0])&&(('/'==arrayData[i].flightDate[1]))){
         arrayData1[j]=arrayData[i];
@@ -330,14 +329,13 @@ function circularPlotLoading(){
        }
      }
     else if((arrayData[i].flightDate[1] === '/')&&(value.length==1)){
-       if((value[0]==arrayData[i].flightDate[0])&&(year[3]==arrayData[i].flightDate[length])){
+       if((value[0]==arrayData[i].flightDate[0])&&(year[3]==arrayData[i].flightDate[length])&&(year[2]==arrayData[i].flightDate[length1])){
         arrayData1[j]=arrayData[i];
         j++;
-        console.log("Zahid");
        }
       }
     else if(value.length==2){
-      if((value[1]==arrayData[i].flightDate[1])&&(year[3]==arrayData[i].flightDate[length])){
+      if((value[1]==arrayData[i].flightDate[1])&&(year[3]==arrayData[i].flightDate[length])&&(year[2]==arrayData[i].flightDate[length1])){
         arrayData1[j]=arrayData[i];
         j++;
        }
@@ -662,7 +660,7 @@ check1.oninput=function(){
 
 dataLoading();
 //barPlotLoading();
-scatterPlotLoading();
+//scatterPlotLoading();
 //circularPlotLoading();
 //TreeMapping();
 
