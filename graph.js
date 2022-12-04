@@ -127,8 +127,8 @@ clickme3.onclick=function(){
 
     let arrayData1=[]
     for(let i=0;i<100;i++){
-      
-      arrayData1[i]=arrayData[i];
+      if(arrayData[i].flightDate[1]=='/')
+        arrayData1[i]=arrayData[i];
     }
     arrayData=arrayData1;
     
@@ -147,6 +147,15 @@ clickme3.onclick=function(){
       .attr("transform",
            "translate(" + margin.left + "," + margin.top + ")");
 
+  // Add the grey background that makes ggplot2 famous
+ svg
+  .append("rect")
+  .attr("x",0)
+  .attr("y",0)
+  .attr("height", height)
+  .attr("width", width)
+  .style("fill", "#E0EEEE")
+
 
     // Add X axis
     var x = d3.scaleBand()
@@ -158,7 +167,7 @@ clickme3.onclick=function(){
     .call(d3.axisBottom(x))
     .selectAll("text")
      .attr("transform", "translate(-10,0)rotate(-45)")
-     .style("text-anchor", "end");
+     .style("text-anchor", "end")
 
 // Add Y axis
    var y = d3.scaleBand()
@@ -167,9 +176,15 @@ clickme3.onclick=function(){
                                      }))
     .padding(0.5);
    svg.append("g")
-    .call(d3.axisLeft(y))
+    .call(d3.axisLeft(y).tickSize(-width*1.3).ticks(7))
+    .select(".domain").remove()
     .selectAll("text")
-     .style("text-anchor", "end");
+     .style("text-anchor", "end")
+
+     // Customization
+  svg.selectAll(".tick line").attr("stroke", "#000000")
+                             .style("opacity", .2)
+                             
 
    // Add a tooltip div. Here I define the general feature of the tooltip: stuff that do not depend on the data point.
 // Its opacity is set to 0: we don't see it by default.
@@ -219,8 +234,8 @@ svg.append('g')
 .data(arrayData) 
 .enter()
 .append("circle")
-  .attr("cx", function (d) { return x(d.originState); } )
-  .attr("cy", function (d) { return y(d.flightDate) } )
+  .attr("cx", function (d) { return x(d.originState)+18; } )
+  .attr("cy", function (d) { return y(d.flightDate)+2; } )
   .attr("r", function(d){ return (d.WildlifeSize=='Large'?15:(d.WildlifeSize=='Medium'?7:2))})
   .style("fill", color)
   .style("opacity", function(d){ return (d.WildlifeSize=='Large'?.3:(d.WildlifeSize=='Medium'?.6:.9))})
