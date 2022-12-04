@@ -1,23 +1,16 @@
-$(function () {
-  $("#slider-range").slider({
-      range: true,
-      min: new Date('1990.01.01').getTime() / 1000,
-      max: new Date('1990.12.01').getTime() / 1000,
-      step: 86400,
-      values: [new Date('1990.02.01').getTime() / 1000, new Date('1990.02.01').getTime() / 1000],
-      slide: function (event, ui) {
-          $("#amount").val((new Date(ui.values[0] * 1000).toDateString()) + " - " + (new Date(ui.values[1] * 1000)).toDateString());
-      }
-  });
-  $("#amount").val((new Date($("#slider-range").slider("values", 0) * 1000).toDateString()) +
-      " - " + (new Date($("#slider-range").slider("values", 1) * 1000)).toDateString());
-});
-
 
 var data = await d3.csv("./birdstrikes.csv");
+
+let clickme= document.getElementById('clickme');
+clickme.onclick=function(){
+  dataLoading();
+  barPlotLoading();
+  scatterPlotLoading();
+  circularPlotLoading();
+}
   
 let clickme1= document.getElementById('clickmeQ1');
-clickme1.onclick=function(){
+function dataLoading(){
     console.log("\nData Output from file\n");
     console.log(data);
    let root=d3.hierarchy(data);
@@ -30,7 +23,7 @@ clickme1.onclick=function(){
 }
 
 let clickme2= document.getElementById('clickmeQ2');
-clickme2.onclick=function(){
+function barPlotLoading(){
     let root=d3.hierarchy(data);
     let arrayData1=storeInArray(root);
     let arrayData=arrayData1.slice(1,10);
@@ -130,9 +123,9 @@ svg.selectAll("rect")
 }
 
 let clickme3= document.getElementById('clickmeQ3');
-clickme3.onclick=function(){
-   
-   console.log(d3.select("#slider-range").values);
+function scatterPlotLoading(){
+   console.log("Zahid");
+   console.log($("#slider-range").value);
    let root=d3.hierarchy(data);
    let arrayData=[];
     // Storing in an array 
@@ -297,7 +290,7 @@ svg.append('g')
 }
 
 let clickme4= document.getElementById('clickmeQ4');
-clickme4.onclick=function(){
+function circularPlotLoading(){
   let root=d3.hierarchy(data);
   console.log(data);
   let arrayData=[];
@@ -423,3 +416,9 @@ function setMaker(arrayData){
   sets[2]=Pflight;
   return sets;
 }
+
+
+dataLoading();
+//barPlotLoading();
+scatterPlotLoading();
+circularPlotLoading();
