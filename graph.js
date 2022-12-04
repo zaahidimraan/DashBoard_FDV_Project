@@ -137,14 +137,28 @@ function scatterPlotLoading(){
 
     let arrayData1=[]
     for(let i=0,j=0;i<100;i++){
-      if(arrayData[i].flightDate[1]=='/'){
-        arrayData1[j]=arrayData[i];
-        j++;
+      if(document.getElementById("sometext").value == '') {
+        if('1'==arrayData[i].flightDate[0]){
+          arrayData1[j]=arrayData[i];
+          j++;
+         }
+       }
+      else if(document.getElementById("sometext").value[1] == '/'){
+         if(document.getElementById("sometext").value[0]==arrayData[i].flightDate[0]){
+          arrayData1[j]=arrayData[i];
+          j++;
+          console.log("Zahid");
+         }
+        }
+      else{
+        if(document.getElementById("sometext").value[1]==arrayData[i].flightDate[1]){
+          arrayData1[j]=arrayData[i];
+          j++;
+         }
       }
     }
     arrayData=arrayData1;
     
-    console.log(arrayData);
     // set the dimensions and margins of the graph
    var margin = {top: 10, right: 30, bottom: 60, left: 60},
    width = 1200 - margin.left - margin.right,
@@ -486,7 +500,6 @@ check.onclick=function(){
   $("#my_dataSpace1").append("<div id=\"my_dataviz1\"></div>")
   scatterPlotLoading();
 }
-
 
 dataLoading();
 //barPlotLoading();
