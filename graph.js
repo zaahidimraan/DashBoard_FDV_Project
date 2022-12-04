@@ -127,7 +127,7 @@ clickme3.onclick=function(){
 
     let arrayData1=[]
     for(let i=0,j=0;i<100;i++){
-      if(arrayData[i].flightDate[0]=='6'){
+      if(arrayData[i].flightDate[1]=='/'){
         arrayData1[j]=arrayData[i];
         j++;
       }
@@ -178,7 +178,7 @@ clickme3.onclick=function(){
                                      }))
     .padding(1);
    svg.append("g")
-    .call(d3.axisLeft(y).tickSize(-width*1.3).ticks(7))
+    .call(d3.axisLeft(y).tickSize(-width*2.3).ticks(7))
     .select(".domain").remove()
     .selectAll("text")
      .style("text-anchor", "end")
@@ -187,7 +187,6 @@ clickme3.onclick=function(){
   svg.selectAll(".tick line").attr("stroke", "#000000")
                              .style("opacity", .2)
                              
-
    // Add a tooltip div. Here I define the general feature of the tooltip: stuff that do not depend on the data point.
 // Its opacity is set to 0: we don't see it by default.
   var tooltip = d3.select("#my_dataviz1")
@@ -224,11 +223,43 @@ clickme3.onclick=function(){
      .style("opacity", 0)
    }
 
-// Color scale: give me a specie name, I return a color
-console.log(sets[2]);
+const setPhaseofFlight=new Set();
+for(let i=0;i<arrayData.length;i++){
+  setPhaseofFlight.add(arrayData[i].phaseOfFight);
+}
+var keys=[];
+for(const element of setPhaseofFlight){
+  keys.push(element);
+  console.log(element);
+}
+// Usually you have a color scale in your chart already
 var color = d3.scaleOrdinal()
-.domain(sets[1])
-.range([ "#F8766D", "#00BA38", "#619CFF","yellow","pink","purple","green"])
+  .domain(keys)
+  .range(d3.schemeSet1);
+
+// Add one dot in the legend for each name.
+var size = 20
+svg.selectAll("mydots")
+  .data(keys)
+  .enter()
+  .append("rect")
+    .attr("x", 1000)
+    .attr("y", function(d,i){ return 400 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("width", size)
+    .attr("height", size)
+    .style("fill", function(d){ return color(d)})
+
+// Add one dot in the legend for each name.
+svg.selectAll("mylabels")
+  .data(keys)
+  .enter()
+  .append("text")
+    .attr("x", 1000 + size*1.2)
+    .attr("y", function(d,i){ return 400 + i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
+    .style("fill", function(d){ return color(d)})
+    .text(function(d){ return d})
+    .attr("text-anchor", "left")
+    .style("alignment-baseline", "middle")
 
 // Add dots
 svg.append('g')
@@ -239,7 +270,7 @@ svg.append('g')
   .attr("cx", function (d) { return x(d.originState); } )
   .attr("cy", function (d) { return y(d.flightDate); } )
   .attr("r", function(d){ return (d.WildlifeSize=='Large'?15:(d.WildlifeSize=='Medium'?7:2))})
-  .style("fill", color)
+  .style("fill", function(d){ return color(d.phaseOfFight)})
   .style("opacity", function(d){ return (d.WildlifeSize=='Large'?.3:(d.WildlifeSize=='Medium'?.6:.9))})
   .style("stroke", "white")
 .on("mouseover", mouseover )
