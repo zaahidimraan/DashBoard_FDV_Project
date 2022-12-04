@@ -187,7 +187,7 @@ clickme3.onclick=function(){
   svg.selectAll(".tick line").attr("stroke", "#000000")
                              .style("opacity", .2)
                              
-   // Add a tooltip div. Here I define the general feature of the tooltip: stuff that do not depend on the data point.
+   // Add a tooltip div.
 // Its opacity is set to 0: we don't see it by default.
   var tooltip = d3.select("#my_dataviz1")
    .append("div")
