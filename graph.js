@@ -124,12 +124,19 @@ clickme3.onclick=function(){
 
     // Making Sets
     let sets=setMaker(arrayData);
+
+    let arrayData1=[]
+    for(let i=0;i<100;i++){
+      
+      arrayData1[i]=arrayData[i];
+    }
+    arrayData=arrayData1;
     
     console.log(sets);
     // set the dimensions and margins of the graph
    var margin = {top: 10, right: 30, bottom: 60, left: 60},
    width = 1200 - margin.left - margin.right,
-   height = 450 - margin.top - margin.bottom;
+   height = 750 - margin.top - margin.bottom;
 
   // append the svg object to the body of the page
   var svg = d3.select("#my_dataviz1")
@@ -156,10 +163,7 @@ clickme3.onclick=function(){
 // Add Y axis
    var y = d3.scaleBand()
     .range([ height, 0 ])
-    .domain(arrayData.map(function(d) { if(d.flightDate[1]=='/')
-                                           return d.flightDate[0];
-                                       else
-                                           return `${d.flightDate[0]}${d.flightDate[1]}`;
+    .domain(arrayData.map(function(d) { return d.flightDate;
                                      }))
     .padding(0.5);
    svg.append("g")
@@ -190,7 +194,7 @@ clickme3.onclick=function(){
 
   var mousemove = function(d) {
    tooltip
-    .html("The exact value of<br>the Ground Living area is: " + d.originState)
+    .html("State Name :: " + d.originState+"<br> Date       :: "+d.flightDate+"<br> Species Size :: "+d.WildlifeSize+"<br>Phase of Flight ::"+d.phaseOfFight)
     .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
     .style("top", (d3.mouse(this)[1]) + "px")
   }
@@ -216,7 +220,7 @@ svg.append('g')
 .enter()
 .append("circle")
   .attr("cx", function (d) { return x(d.originState); } )
-  .attr("cy", function (d) { return y(d.flightDate[1]=='/'?d.flightDate[0]:`${d.flightDate[0]}${d.flightDate[1]}`); } )
+  .attr("cy", function (d) { return y(d.flightDate) } )
   .attr("r", function(d){ return (d.WildlifeSize=='Large'?15:(d.WildlifeSize=='Medium'?7:2))})
   .style("fill", color)
   .style("opacity", function(d){ return (d.WildlifeSize=='Large'?.3:(d.WildlifeSize=='Medium'?.6:.9))})
