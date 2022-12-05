@@ -488,6 +488,8 @@ function TreeMapping(){
     console.log(arrayData);
 
   }
+
+
 //Store data in the form of array and return
 function storeInArray(root){
     let arrayData=[];
