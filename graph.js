@@ -217,7 +217,7 @@ function scatterPlotLoading(){
                              
    // Add a tooltip div.
 // Its opacity is set to 0: we don't see it by default.
-  var tooltip = d3.select("#my_dataviz1")
+  var tooltip = d3v7.select("#my_dataviz1")
    .append("div")
    .style("opacity", 0)
    .attr("class", "tooltip")
@@ -239,8 +239,8 @@ function scatterPlotLoading(){
   var mousemove = function(d) {
    tooltip
     .html("State Name :: " + d.originState+"<br> Date       :: "+d.flightDate+"<br> Species Size :: "+d.WildlifeSize+"<br>Phase of Flight ::"+d.phaseOfFight)
-    .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-    .style("top", (d3.mouse(this)[1]) + "px")
+    .style("left", (d3v7.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+    .style("top", (d3v7.mouse(this)[1]) + "px")
   }
 
   // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
@@ -291,8 +291,8 @@ svg.selectAll("mylabels")
 
 
 // Add dots
-const gDot=svg.append('g')
-.selectAll("dot")
+var scatter=svg.append('g')
+scatter.selectAll("dot")
 .data(arrayData) 
 .enter()
 .append("circle")
