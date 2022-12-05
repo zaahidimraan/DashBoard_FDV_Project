@@ -327,10 +327,10 @@ scatter.selectAll("dot")
 .on("mousemove", mousemove )
 .on("mouseleave", mouseleave )
 
-scatter
-.append("g")
-  .attr("class", "brush")
-  .call(brush);
+//scatter
+//.append("g")
+//  .attr("class", "brush")
+//  .call(brush);
 
 // A function that set idleTimeOut to null
 var idleTimeout
