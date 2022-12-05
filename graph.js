@@ -1,7 +1,7 @@
 
 var data = await d3.csv("./birdstrikes.csv");
   
-let clickme1= document.getElementById('clickmeQ1');
+//let clickme1= document.getElementById('clickmeQ1');
 function dataLoading(){
     console.log("\nData Output from file\n");
     console.log(data);
@@ -14,14 +14,42 @@ function dataLoading(){
     console.log(arrayData);
 }
 
-let clickme2= document.getElementById('clickmeQ2');
+//let clickme2= document.getElementById('clickmeQ2');
 function barPlotLoading(){
     let root=d3.hierarchy(data);
-    let arrayData1=storeInArray(root);
-    let arrayData=arrayData1.slice(1,10);
+    let arrayData=storeInArray(root);
+
+    let arrayData1=[]
+    let value=document.getElementById("sometext").value;
+    let year=document.getElementById("sometext1").value;
+    for(let i=0,j=0;i<arrayData.length;i++){
+      let length=arrayData[i].flightDate.length;
+      length=length-1;
+      let length1=length;
+      length1=length1-1;
+      if((value == '')&&(year=='')) {
+        if(('1'==arrayData[i].flightDate[0])&&(('/'==arrayData[i].flightDate[1]))){
+          arrayData1[j]=arrayData[i];
+          j++;
+         }
+       }
+      else if((arrayData[i].flightDate[1] === '/')&&(value.length==1)){
+         if((value[0]==arrayData[i].flightDate[0])&&(year[3]==arrayData[i].flightDate[length])&&(year[2]==arrayData[i].flightDate[length1])){
+          arrayData1[j]=arrayData[i];
+          j++;
+         }
+        }
+      else if(value.length==2){
+        if((value[1]==arrayData[i].flightDate[1])&&(year[3]==arrayData[i].flightDate[length])&&(year[2]==arrayData[i].flightDate[length1])){
+          arrayData1[j]=arrayData[i];
+          j++;
+         }
+      }
+    }
+    arrayData=arrayData1;
    // set the dimensions and margins of the graph
    var margin = {top: 10, right: 30, bottom: 90, left: 40},
-    width = 460 - margin.left - margin.right,
+    width = 1460 - margin.left - margin.right,
     height = 450 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
@@ -36,7 +64,7 @@ var svg = d3.select("#my_dataviz3")
 // Barplot
   var x = d3.scaleBand()
    .range([ 0, width ])
-   .domain(arrayData.map(function(d) { return d.airportName; }))
+   .domain(arrayData.map(function(d) { return d.aircraftMakeModel; }))
    .padding(0.2);
   svg.append("g")
    .attr("transform", "translate(0," + height + ")")
@@ -87,14 +115,28 @@ svg.append("g")
       .style("opacity", 0.8)
   }
 
+  const effectAmountofDamage=new Set();
+  for(let i=0;i<arrayData.length;i++){
+    effectAmountofDamage.add(arrayData[i].aircraftMakeModel);
+  }
+  var keys=[];
+  for(const element of effectAmountofDamage){
+    keys.push(element);
+    console.log(element);
+  }
+  // Usually you have a color scale in your chart already
+  var color = d3v4.scaleOrdinal()
+    .domain(keys)
+    .range(d3.schemeSet1);
+
 // Bars
 svg.selectAll("mybar")
   .data(arrayData)
   .enter()
   .append("rect")
-    .attr("x", function(d) { return x(d.airportName); })
+    .attr("x", function(d) { return x(d.aircraftMakeModel); })
     .attr("width", x.bandwidth())
-    .attr("fill", "red")
+    .attr("fill", function(d){ return color(d.effectAmountofDamage)})
     // no bar at the beginning thus:
     .attr("height", function(d) { return height - y(0); }) // always equal to 0
     .attr("y", function(d) { return y(0); })
@@ -114,7 +156,7 @@ svg.selectAll("rect")
 
 }
 
-let clickme3= document.getElementById('clickmeQ3');
+// clickme3= document.getElementById('clickmeQ3');
 function scatterPlotLoading(){
    console.log("Zahid");
    let root=d3.hierarchy(data);
@@ -357,7 +399,7 @@ function updateChart() {
 
 }
 
-let clickme4= document.getElementById('clickmeQ4');
+//let clickme4= document.getElementById('clickmeQ4');
 function circularPlotLoading(){
   let root=d3.hierarchy(data);
   console.log(data);
