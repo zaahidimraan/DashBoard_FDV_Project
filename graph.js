@@ -192,7 +192,8 @@ function scatterPlotLoading(){
     .range([ 0, width ])
     .domain(arrayData.map(function(d) { return d.originState; }))
     .padding(1);
-   svg.append("g")
+
+   var xAxis=svg.append("g")
     .attr("transform", "translate(0," + height + ")")
     .call(d3.axisBottom(x))
     .selectAll("text")
@@ -205,11 +206,20 @@ function scatterPlotLoading(){
     .domain(arrayData.map(function(d) { return d.flightDate;
                                      }))
     .padding(1);
-   svg.append("g")
+   var yAxis=svg.append("g")
     .call(d3.axisLeft(y).tickSize(-width*2.3).ticks(7))
     .select(".domain").remove()
     .selectAll("text")
-     .style("text-anchor", "end")
+     .style("text-anchor", "end");
+
+  // Add a clipPath: everything out of this area won't be drawn.
+  var clip = svg.append("defs").append("svg:clipPath")
+  .attr("id", "clip")
+  .append("svg:rect")
+  .attr("width", width )
+  .attr("height", height )
+  .attr("x", 0)
+  .attr("y", 0);
 
      // Customization
   svg.selectAll(".tick line").attr("stroke", "#000000")
@@ -217,7 +227,7 @@ function scatterPlotLoading(){
                              
    // Add a tooltip div.
 // Its opacity is set to 0: we don't see it by default.
-  var tooltip = d3v7.select("#my_dataviz1")
+  var tooltip = d3.select("#my_dataviz1")
    .append("div")
    .style("opacity", 0)
    .attr("class", "tooltip")
@@ -239,8 +249,8 @@ function scatterPlotLoading(){
   var mousemove = function(d) {
    tooltip
     .html("State Name :: " + d.originState+"<br> Date       :: "+d.flightDate+"<br> Species Size :: "+d.WildlifeSize+"<br>Phase of Flight ::"+d.phaseOfFight)
-    .style("left", (d3v7.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-    .style("top", (d3v7.mouse(this)[1]) + "px")
+    .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+    .style("top", (d3.mouse(this)[1]) + "px")
   }
 
   // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
@@ -261,9 +271,16 @@ for(const element of setPhaseofFlight){
   console.log(element);
 }
 // Usually you have a color scale in your chart already
-var color = d3.scaleOrdinal()
+var color = d3v4.scaleOrdinal()
   .domain(keys)
   .range(d3.schemeSet1);
+
+
+ // Add brushing
+ var brush = d3.brushX()                 // Add the brush feature using the d3.brush function
+ .extent( [ [0,0], [width,height] ] ) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+ .on("end", updateChart) // Each time the brush selection changes, trigger the 'updateChart' function
+
 
 // Add one dot in the legend for each name.
 var size = 20
@@ -291,7 +308,11 @@ svg.selectAll("mylabels")
 
 
 // Add dots
-var scatter=svg.append('g')
+
+// Create the scatter variable: where both the circles and the brush take place
+var scatter = svg.append('g')
+  .attr("clip-path", "url(#clip)")
+// Add circles
 scatter.selectAll("dot")
 .data(arrayData) 
 .enter()
@@ -305,6 +326,41 @@ scatter.selectAll("dot")
 .on("mouseover", mouseover )
 .on("mousemove", mousemove )
 .on("mouseleave", mouseleave )
+
+scatter
+.append("g")
+  .attr("class", "brush")
+  .call(brush);
+
+// A function that set idleTimeOut to null
+var idleTimeout
+function idled() { idleTimeout = null; }
+
+// A function that update the chart for given boundaries
+function updateChart() {
+
+  var extent = d3.event.selection;
+
+  // If no selection, back to initial coordinate. Otherwise, update X axis domain
+  if(!extent){
+    if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); 
+    x.domain([ 4,8])
+  }else{
+    x.domain([ x.continuous.invert(extent[0]), x.continuous.invert(extent[1]) ])
+    scatter.select(".brush").call(brush.move, null) 
+  }
+
+  // Update axis and circle position
+  xAxis.transition().duration(1000).call(d3.axisBottom(x))
+  scatter
+    .selectAll("dot")
+    .transition().duration(1000)
+    .attr("cx", function (d) { return x(d.originState); } )
+    .attr("cy", function (d) { return y(d.flightDate); } )
+
+  }
+
+
 
 
 }
@@ -583,7 +639,3 @@ check1.oninput=function(){
 TreeMapping();
 
 
-
-
-
-                
