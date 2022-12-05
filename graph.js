@@ -1,13 +1,5 @@
 
 var data = await d3.csv("./birdstrikes.csv");
-
-let clickme= document.getElementById('clickme');
-clickme.onclick=function(){
-  dataLoading();
-  barPlotLoading();
-  scatterPlotLoading();
-  circularPlotLoading();
-}
   
 let clickme1= document.getElementById('clickmeQ1');
 function dataLoading(){
@@ -33,7 +25,7 @@ function barPlotLoading(){
     height = 450 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
-var svg = d3.select("#my_dataviz")
+var svg = d3.select("#my_dataviz3")
   .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -63,7 +55,7 @@ svg.append("g")
 
 
   // create a tooltip
-  var Tooltip = d3.select("#my_dataviz")
+  var Tooltip = d3.select("#my_dataviz3")
     .append("div")
     .style("opacity", 0)
     .attr("class", "tooltip")
@@ -563,10 +555,6 @@ function TreeMapping(){
   });
   console.log(root);
 }
-
-
-  
-
 
 //Store data in the form of array and return
 function storeInArray(root){
