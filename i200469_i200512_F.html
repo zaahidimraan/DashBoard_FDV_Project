@@ -8,12 +8,16 @@
     <style>
 
 .slider1 {
+  margin: 40px 40x 40px 40px;
   padding-left: 90px;
-  background:#e7e7e793;
-  border-radius:20px;
+  background:#fefdfddf;
+  border-radius:50px;
   display:flex;
   align-items:center;
-  box-shadow:0px 15px 40px #3e372e66;
+  box-shadow:5px 15px 10px #11101066;
+  width:2200px;
+  height:650px;
+
  }
       .slider {
   position:absolute;
@@ -57,7 +61,12 @@
  .slider input[type=”range”]::-webkit-slider-thumb:hover {
   background:#7E6D57;
  }
-    </style>     
+    </style>
+    <script src="https://d3js.org/d3.v7.js"></script>
+    <script>
+        var d3v7 = window.d3;
+        window.d3 = null;
+    </script>     
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 </head>
@@ -85,8 +94,10 @@
     <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
     
-    <!--Line for Month Selection-->
+
     
+
+    <!--Line for Month Selection-->    
     <div class="slider">
       <label for="sometext">Month    </label>
       <input type="range" min="1" max="12" value=""   id="sometext">
@@ -106,6 +117,7 @@
       <div id="my_dataviz2"></div>
       <div id="my_dataviz3"></div>
     </div>
+
     <svg width="700" height="360">
       <g transform="translate(0, 2)"></g>            
     </svg>

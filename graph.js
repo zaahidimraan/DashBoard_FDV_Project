@@ -289,8 +289,9 @@ svg.selectAll("mylabels")
     .attr("text-anchor", "left")
     .style("alignment-baseline", "middle")
 
+
 // Add dots
-svg.append('g')
+const gDot=svg.append('g')
 .selectAll("dot")
 .data(arrayData) 
 .enter()
@@ -304,6 +305,7 @@ svg.append('g')
 .on("mouseover", mouseover )
 .on("mousemove", mousemove )
 .on("mouseleave", mouseleave )
+
 
 }
 
@@ -480,12 +482,100 @@ svg.selectAll("mylabels")
 }
 
 function TreeMapping(){
-    let root=d3.hierarchy(data);
-    console.log(data);
+    let root1=d3.hierarchy(data);
+    //console.log(data);
     let arrayData=[];
      // Storing in an array 
-    arrayData=storeInArray(root);
-    console.log(arrayData);
+    arrayData=storeInArray(root1);
+    //console.log(arrayData);
+
+         
+    let groups = d3v7.rollup(arrayData, // rollup function to group the data by any of the categorical properties
+                        function(d) { return d.originState; },
+                        function(d) { return d.airportName; },
+                        function(d) { return d.speedIASinKnots; },
+                        
+                        );
+                        
+                        // There are several ways in which hierarchical data can be visualised including trees, 
+                        // treemaps, packed circles and sunbursts.
+    console.log(groups);
+    let root = d3.hierarchy(groups);
+    root.sum(function(d) {
+        return d[1];
+    });
+console.log(root);
+// tree, cluster, treemap, pack and partition layouts. Note that treemap, pack and 
+// partition are designed to lay out hierarchies where the nodes have an associated numeric value (e.g. revenue, population etc.).
+    let treeLayout = d3.tree()
+        .size([700, 220])
+    treeLayout(root)
+    // create it with any other layout
+
+    // let clusterLayout = d3.cluster()
+    //     .size([700, 220])
+    // clusterLayout(root)
+
+    // let treemapLayout = d3.treemap()
+    //     .size([700, 220])
+    // treemapLayout(root)
+
+
+
+    // let packLayout = d3.pack()
+    //     .size([960,450])
+    // packLayout(root)
+
+
+    console.log("These are root descendents",root.descendants())
+
+
+    let svg=d3.select("#my_dataviz2");
+
+    // Links
+    svg.append('g')
+        .selectAll('line')
+        .data(root.links())
+        .join('line')
+        .attr('x1', function(d) {return d.source.x;})
+        .attr('y1', function(d) {return d.source.y;})
+        .attr('x2', function(d) {return d.target.x;})
+        .attr('y2', function(d) {return d.target.y;});
+
+    // Nodes
+    svg.select('g')
+        .selectAll('circle')
+        .data(root.descendants())
+        .join('circle')
+        .attr('cx', function(d) {return d.x;})
+        .attr('cy', function(d) {return d.y;})
+        .attr('r', 4);
+
+    // Labels
+    svg.select('g')
+        .selectAll('text.label')
+        .data(root.descendants())
+        .join('text')
+        .classed('label', true)
+        .attr('x', function(d) {return d.x;})
+        .attr('y', function(d) {return d.y - 10;})
+        .text(function(d) {
+            return d.data[0];
+        });
+
+    // Leaf count labels
+    svg.select('g')
+        .selectAll('text.count-label')
+        .data(root.descendants())
+        .join('text')
+        .classed('count-label', true)
+        .attr('x', function(d) {return d.x;})
+        .attr('y', function(d) {return d.y + 20;})
+        .text(function(d) {
+            if (d.height > 0) return '';
+            return d.data[1];
+        });
+
 
   }
 
@@ -556,7 +646,7 @@ check1.oninput=function(){
 }
 
 
-dataLoading();
+//dataLoading();
 //barPlotLoading();
 //scatterPlotLoading();
 //circularPlotLoading();
