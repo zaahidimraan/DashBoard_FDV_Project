@@ -538,32 +538,34 @@ svg.selectAll("mylabels")
 }
 
 function TreeMapping(){
-    let root1=d3.hierarchy(data);
-    //console.log(data);
-    let arrayData=[];
-     // Storing in an array 
-    arrayData=storeInArray(root1);
-    //console.log(arrayData);
+  let root1=d3.hierarchy(data);
+  //console.log(data);
+  let arrayData=[];
+   // Storing in an array 
+  arrayData=storeInArray(root1);
+  //console.log(arrayData);
 
-         
-    let groups = d3v7.rollup(arrayData, // rollup function to group the data by any of the categorical properties
-                        function(d) { return d.originState; },
-                        function(d) { return d.airportName; },
-                        function(d) { return d.speedIASinKnots; },
-                        
-                        );
-                        
-                        // There are several ways in which hierarchical data can be visualised including trees, 
-                        // treemaps, packed circles and sunbursts.
-    console.log(groups);
-    let root = d3.hierarchy(groups);
-    root.sum(function(d) {
-        return d[1];
-    });
-    console.log(root);
+       
+  let groups = d3v7.rollup(arrayData, // rollup function to group the data by any of the categorical properties
+                      function(d) { return d.originState; },
+                      function(d) { return d.airportName; },
+                      function(d) { return d.speedIASinKnots; },
+                      
+                      );
+                      
+                      // There are several ways in which hierarchical data can be visualised including trees, 
+                      // treemaps, packed circles and sunbursts.
+  console.log(groups);
+
+  let root = d3.hierarchy(groups);
+  root.sum(function(d) {
+      return d[1];
+  });
+  console.log(root);
+}
 
 
-  }
+  
 
 
 //Store data in the form of array and return
@@ -632,10 +634,10 @@ check1.oninput=function(){
 }
 
 
-//dataLoading();
-//barPlotLoading();
-//scatterPlotLoading();
-//circularPlotLoading();
+dataLoading();
+barPlotLoading();
+scatterPlotLoading();
+circularPlotLoading();
 TreeMapping();
 
 
