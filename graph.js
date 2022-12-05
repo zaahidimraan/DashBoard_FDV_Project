@@ -55,7 +55,7 @@ function barPlotLoading(){
 // append the svg object to the body of the page
 var svg = d3.select("#my_dataviz3")
   .append("svg")
-    .attr("width", width + margin.left + margin.right)
+    .attr("width", (width + margin.left + margin.right)+450)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform",
@@ -157,6 +157,29 @@ svg.selectAll("rect")
   .attr("height", function(d) { return height - y(d.speedIASinKnots); })
   .delay(function(d,i){console.log(i) ; return(0)})
 
+  // Add one dot in the legend for each name.
+var size = 20
+svg.selectAll("mydots")
+  .data(keys)
+  .enter()
+  .append("rect")
+    .attr("x", 1550)
+    .attr("y", function(d,i){ return i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("width", size)
+    .attr("height", size)
+    .style("fill", function(d){ return color(d)})
+
+// Add one dot in the legend for each name.
+svg.selectAll("mylabels")
+  .data(keys)
+  .enter()
+  .append("text")
+    .attr("x", 1550 + size*1.2)
+    .attr("y", function(d,i){ return i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
+    .style("fill", function(d){ return color(d)})
+    .text(function(d){ return d})
+    .attr("text-anchor", "left")
+    .style("alignment-baseline", "middle");
 
 }
 
@@ -215,7 +238,7 @@ function scatterPlotLoading(){
       .attr("transform",
            "translate(" + margin.left + "," + margin.top + ")");
 
-  // Add the grey background that makes ggplot2 famous
+  // Add  background that makes ggplot2 famous
  svg
   .append("rect")
   .attr("x",0)
@@ -327,7 +350,7 @@ svg.selectAll("mydots")
   .enter()
   .append("rect")
     .attr("x", 1120)
-    .attr("y", function(d,i){ return 50 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("y", function(d,i){ return 370 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
     .attr("width", size)
     .attr("height", size)
     .style("fill", function(d){ return color(d)})
@@ -338,7 +361,7 @@ svg.selectAll("mylabels")
   .enter()
   .append("text")
     .attr("x", 1010 + size*1.2)
-    .attr("y", function(d,i){ return 50 + i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("y", function(d,i){ return 370 + i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
     .style("fill", function(d){ return color(d)})
     .text(function(d){ return d})
     .attr("text-anchor", "left")
@@ -555,7 +578,7 @@ svg.selectAll("mydots")
   .data(keys)
   .enter()
   .append("rect")
-    .attr("x", 50)
+    .attr("x", 870)
     .attr("y", function(d,i){ return 300 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
     .attr("width", size)
     .attr("height", size)
@@ -566,7 +589,7 @@ svg.selectAll("mylabels")
   .data(keys)
   .enter()
   .append("text")
-    .attr("x", 50 + size*1.2)
+    .attr("x", 870 + size*1.2)
     .attr("y", function(d,i){ return 300 + i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
     .style("fill", function(d){ return color(d)})
     .text(function(d){ return d})
