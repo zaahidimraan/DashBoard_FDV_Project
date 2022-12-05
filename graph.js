@@ -103,7 +103,8 @@ svg.append("g")
   }
   var mousemove = function(d) {
     Tooltip
-      .html("The exact value of<br>this cell is: " + d.speedIASinKnots)
+    .html("State Name :: " + d.originState+"<br> Date       :: "+d.flightDate+"<br> Species Size :: "+d.WildlifeSize+"<br>Phase of Flight ::"+d.phaseOfFight+
+                      "<br>Speed:: "+d.speedIASinKnots+"<br>Model ::"+d.aircraftMakeModel+"<br>Aircraft Operator"+d.aircraftAirlineOperator)
       .style("left", (d3.mouse(this)[0]+70) + "px")
       .style("top", (d3.mouse(this)[1]) + "px")
   }
@@ -117,7 +118,7 @@ svg.append("g")
 
   const effectAmountofDamage=new Set();
   for(let i=0;i<arrayData.length;i++){
-    effectAmountofDamage.add(arrayData[i].aircraftMakeModel);
+    effectAmountofDamage.add(arrayData[i].aircraftAirlineOperator);
   }
   var keys=[];
   for(const element of effectAmountofDamage){
@@ -129,6 +130,8 @@ svg.append("g")
     .domain(keys)
     .range(d3.schemeSet1);
 
+
+
 // Bars
 svg.selectAll("mybar")
   .data(arrayData)
@@ -136,7 +139,7 @@ svg.selectAll("mybar")
   .append("rect")
     .attr("x", function(d) { return x(d.aircraftMakeModel); })
     .attr("width", x.bandwidth())
-    .attr("fill", function(d){ return color(d.effectAmountofDamage)})
+    .attr("fill", function(d){ return color(d.aircraftAirlineOperator)})
     // no bar at the beginning thus:
     .attr("height", function(d) { return height - y(0); }) // always equal to 0
     .attr("y", function(d) { return y(0); })
@@ -145,13 +148,14 @@ svg.selectAll("mybar")
   .on("mouseleave", mouseleave)
 
 
+
 // Animation
 svg.selectAll("rect")
   .transition()
-  .duration(800)
+  .duration(2500)
   .attr("y", function(d) { return y(d.speedIASinKnots); })
   .attr("height", function(d) { return height - y(d.speedIASinKnots); })
-  .delay(function(d,i){console.log(i) ; return(i*100)})
+  .delay(function(d,i){console.log(i) ; return(0)})
 
 
 }
@@ -645,10 +649,13 @@ check.oninput=function(){
   document.getElementById("rangeValue").innerHTML=val;
   $("#my_dataviz1").remove();
   $("#my_dataviz2").remove();
+  $("#my_dataviz3").remove();
   $("#my_dataSpace1").append("<div id=\"my_dataviz1\"></div>")  
   $("#my_dataSpace1").append("<div id=\"my_dataviz2\"></div>")
+  $("#my_dataSpace2").append("<div id=\"my_dataviz3\"></div>")
   scatterPlotLoading();
   circularPlotLoading();
+  barPlotLoading();
 }
 
 let check1= document.getElementById('sometext1');
@@ -657,10 +664,13 @@ check1.oninput=function(){
   document.getElementById("rangeValue").innerHTML=val;
   $("#my_dataviz1").remove();
   $("#my_dataviz2").remove();
+  $("#my_dataviz3").remove();
   $("#my_dataSpace1").append("<div id=\"my_dataviz1\"></div>")  
   $("#my_dataSpace1").append("<div id=\"my_dataviz2\"></div>")
+  $("#my_dataSpace2").append("<div id=\"my_dataviz3\"></div>")
   scatterPlotLoading();
   circularPlotLoading();
+  barPlotLoading();
 }
 
 
