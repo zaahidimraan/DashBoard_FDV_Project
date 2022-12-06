@@ -337,12 +337,6 @@ var color = d3v4.scaleOrdinal()
   .range(d3.schemeSet1);
 
 
- // Add brushing
- var brush = d3.brushX()                 // Add the brush feature using the d3.brush function
- .extent( [ [0,0], [width,height] ] ) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
- .on("end", updateChart) // Each time the brush selection changes, trigger the 'updateChart' function
-
-
 // Add one dot in the legend for each name.
 var size = 20
 svg.selectAll("mydots")
@@ -387,41 +381,6 @@ scatter.selectAll("dot")
 .on("mouseover", mouseover )
 .on("mousemove", mousemove )
 .on("mouseleave", mouseleave )
-
-//scatter
-//.append("g")
-//  .attr("class", "brush")
-//  .call(brush);
-
-// A function that set idleTimeOut to null
-var idleTimeout
-function idled() { idleTimeout = null; }
-
-// A function that update the chart for given boundaries
-function updateChart() {
-
-  var extent = d3.event.selection;
-
-  // If no selection, back to initial coordinate. Otherwise, update X axis domain
-  if(!extent){
-    if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); 
-    x.domain([ 4,8])
-  }else{
-    x.domain([ x.continuous.invert(extent[0]), x.continuous.invert(extent[1]) ])
-    scatter.select(".brush").call(brush.move, null) 
-  }
-
-  // Update axis and circle position
-  xAxis.transition().duration(1000).call(d3.axisBottom(x))
-  scatter
-    .selectAll("dot")
-    .transition().duration(1000)
-    .attr("cx", function (d) { return x(d.originState); } )
-    .attr("cy", function (d) { return y(d.flightDate); } )
-
-  }
-
-
 
 
 }
@@ -609,20 +568,94 @@ function TreeMapping(){
        
   let groups = d3v7.rollup(arrayData, // rollup function to group the data by any of the categorical properties
                       function(d) { return d.originState; },
-                      function(d) { return d.airportName; },
-                      function(d) { return d.speedIASinKnots; },
+                      function(d) { return d.airportName; }
                       
                       );
                       
                       // There are several ways in which hierarchical data can be visualised including trees, 
                       // treemaps, packed circles and sunbursts.
   console.log(groups);
+  console.log(d3v7.hierarchy(d3v7.group(arrayData, d => d.originState)));
 
-  let root = d3.hierarchy(groups);
-  root.sum(function(d) {
-      return d[1];
-  });
+  let root = d3v7.hierarchy(groups);
   console.log(root);
+  const height = 600,width=600;
+    const links = root.links();
+    const nodes = root.descendants();
+
+     var drag = simulation => {
+  
+      function dragstarted(event, d) {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x;
+        d.fy = d.y;
+      }
+      
+      function dragged(event, d) {
+        d.fx = event.x;
+        d.fy = event.y;
+      }
+      
+      function dragended(event, d) {
+        if (!event.active) simulation.alphaTarget(0);
+        d.fx = null;
+        d.fy = null;
+      }
+      
+      return d3v7.drag()
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended);
+    }
+  
+    const simulation = d3v7.forceSimulation(nodes)
+        .force("link", d3v7.forceLink(links).id(d => d.id).distance(0).strength(1))
+        .force("charge", d3v7.forceManyBody().strength(-50))
+        .force("x", d3v7.forceX())
+        .force("y", d3v7.forceY());
+  
+    const svg = d3v7.create("svg")
+        .attr("viewBox", [-width / 2, -height / 2, width, height]);
+  
+    const link = svg.append("g")
+        .attr("stroke", "#999")
+        .attr("stroke-opacity", 0.6)
+      .selectAll("line")
+      .data(links)
+      .join("line");
+  
+    const node = svg.append("g")
+        .attr("fill", "#fff")
+        .attr("stroke", "#000")
+        .attr("stroke-width", 1.5)
+      .selectAll("circle")
+      .data(nodes)
+      .join("circle")
+        .attr("fill", d => d.children ? null : "#000")
+        .attr("stroke", d => d.children ? null : "#fff")
+        .attr("r", 3.5)
+        .call(drag(simulation));
+  
+    node.append("title")
+        .text(d => d.data.name);
+  
+    simulation.on("tick", () => {
+      link
+          .attr("x1", d => d.source.x)
+          .attr("y1", d => d.source.y)
+          .attr("x2", d => d.target.x)
+          .attr("y2", d => d.target.y);
+  
+      node
+          .attr("cx", d => d.x)
+          .attr("cy", d => d.y);
+    });
+  
+    //invalidation.then(() => simulation.stop());
+  
+    $("#my_dataviz3").append(svg.node());
+  
+
 }
 
 //Store data in the form of array and return
@@ -697,10 +730,10 @@ check1.oninput=function(){
 }
 
 
-dataLoading();
-barPlotLoading();
-scatterPlotLoading();
-circularPlotLoading();
+//dataLoading();
+//barPlotLoading();
+//scatterPlotLoading();
+//circularPlotLoading();
 TreeMapping();
 
 
