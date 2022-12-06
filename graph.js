@@ -227,7 +227,7 @@ function scatterPlotLoading(){
     // set the dimensions and margins of the graph
    var margin = {top: 10, right: 30, bottom: 60, left: 60},
    width = 1200 - margin.left - margin.right,
-   height = 600 - margin.top - margin.bottom;
+   height = 700 - margin.top - margin.bottom;
 
   // append the svg object to the body of the page
   var svg = d3.select("#my_dataviz1")
@@ -562,14 +562,40 @@ function TreeMapping(){
   let arrayData=[];
    // Storing in an array 
   arrayData=storeInArrayTree(data);
-  console.log(arrayData);
+  let arrayData1=[];
+  let value=document.getElementById("sometext").value;
+  let year=document.getElementById("sometext1").value;
+  for(let i=0,j=0;i<arrayData.length;i++){
+    let length=arrayData[i].flightDate.length;
+    length=length-1;
+    let length1=length;
+    length1=length1-1;
+    if((value == '')&&(year=='')) {
+      if(('1'==arrayData[i].flightDate[0])&&(('/'==arrayData[i].flightDate[1]))){
+        arrayData1[j]=arrayData[i];
+        j++;
+       }
+     }
+    else if((arrayData[i].flightDate[1] === '/')&&(value.length==1)){
+       if((value[0]==arrayData[i].flightDate[0])&&(year[3]==arrayData[i].flightDate[length])&&(year[2]==arrayData[i].flightDate[length1])){
+        arrayData1[j]=arrayData[i];
+        j++;
+       }
+      }
+    else if(value.length==2){
+      if((value[1]==arrayData[i].flightDate[1])&&(year[3]==arrayData[i].flightDate[length])&&(year[2]==arrayData[i].flightDate[length1])){
+        arrayData1[j]=arrayData[i];
+        j++;
+       }
+    }
+  }
+  arrayData=arrayData1;
 
        
   let groups = d3v7.rollup(arrayData, // rollup function to group the data by any of the categorical properties
                        
-
-                      function(d) { return d.originState; },
                       function(d) { return d.airportName; },
+                      function(d) { return d.originState; },
                       function(d) { return d.aircraftAirlineOperator; },
                       );
                       
@@ -656,7 +682,7 @@ function TreeMapping(){
     });
   
   
-    $("body").append(svg.node());
+    $("#my_dataviz4").append(svg.node());
      console.log("Zahid");  
 
 }
@@ -688,7 +714,7 @@ function storeInArray(root){
 //Store data in the form of array and return for tree
 function storeInArrayTree(root){
   let arrayData=[];
-  for(let i=0;i<500;i++){
+  for(let i=0;i<root.length;i++){
       arrayData[i]={
        airportName:root[i]['Airport Name'],
        aircraftMakeModel:root[i]['Aircraft Make Model'],
@@ -733,12 +759,15 @@ check.oninput=function(){
   $("#my_dataviz1").remove();
   $("#my_dataviz2").remove();
   $("#my_dataviz3").remove();
-  $("#my_dataSpace1").append("<div id=\"my_dataviz1\"></div>")  
-  $("#my_dataSpace1").append("<div id=\"my_dataviz2\"></div>")
-  $("#my_dataSpace2").append("<div id=\"my_dataviz3\"></div>")
+  $("#my_dataviz4").remove();
+  $("#my_dataSpace1").append("<div id=\"my_dataviz1\"></div>");  
+  $("#my_dataSpace1").append("<div id=\"my_dataviz2\"></div>");
+  $("#my_dataSpace2").append("<div id=\"my_dataviz3\"></div>");
+  $("#my_dataSpace3").append("<div id=\"my_dataviz4\"></div>");
   scatterPlotLoading();
   circularPlotLoading();
   barPlotLoading();
+  TreeMapping();
 }
 
 let check1= document.getElementById('sometext1');
@@ -748,19 +777,22 @@ check1.oninput=function(){
   $("#my_dataviz1").remove();
   $("#my_dataviz2").remove();
   $("#my_dataviz3").remove();
-  $("#my_dataSpace1").append("<div id=\"my_dataviz1\"></div>")  
-  $("#my_dataSpace1").append("<div id=\"my_dataviz2\"></div>")
-  $("#my_dataSpace2").append("<div id=\"my_dataviz3\"></div>")
+  $("#my_dataviz4").remove();
+  $("#my_dataSpace1").append("<div id=\"my_dataviz1\"></div>"); 
+  $("#my_dataSpace1").append("<div id=\"my_dataviz2\"></div>");
+  $("#my_dataSpace2").append("<div id=\"my_dataviz3\"></div>");
+  $("#my_dataSpace3").append("<div id=\"my_dataviz4\"></div>");
   scatterPlotLoading();
   circularPlotLoading();
   barPlotLoading();
+  TreeMapping();
 }
 
 
-//dataLoading();
-//barPlotLoading();
-//scatterPlotLoading();
-//circularPlotLoading();
+dataLoading();
+barPlotLoading();
+scatterPlotLoading();
+circularPlotLoading();
 TreeMapping();
 
 
