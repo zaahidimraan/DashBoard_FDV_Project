@@ -558,27 +558,31 @@ svg.selectAll("mylabels")
 }
 
 function TreeMapping(){
-  let root1=d3.hierarchy(data);
   //console.log(data);
   let arrayData=[];
    // Storing in an array 
-  arrayData=storeInArray(root1);
-  //console.log(arrayData);
+  arrayData=storeInArrayTree(data);
+  console.log(arrayData);
 
        
   let groups = d3v7.rollup(arrayData, // rollup function to group the data by any of the categorical properties
+                       
+
                       function(d) { return d.originState; },
-                      function(d) { return d.airportName; }
-                      
+                      function(d) { return d.airportName; },
+                      function(d) { return d.aircraftAirlineOperator; },
                       );
                       
                       // There are several ways in which hierarchical data can be visualised including trees, 
                       // treemaps, packed circles and sunbursts.
   console.log(groups);
-  console.log(d3v7.hierarchy(d3v7.group(arrayData, d => d.originState)));
+  //console.log(d3v7.hierarchy(d3v7.group(arrayData, d => d.originState)));
 
   let root = d3v7.hierarchy(groups);
   console.log(root);
+  root.sum(function(d) {
+    return d[1];
+   });
   const height = 600,width=600;
     const links = root.links();
     const nodes = root.descendants();
@@ -651,10 +655,9 @@ function TreeMapping(){
           .attr("cy", d => d.y);
     });
   
-    //invalidation.then(() => simulation.stop());
   
-    $("#my_dataviz3").append(svg.node());
-  
+    $("body").append(svg.node());
+     console.log("Zahid");  
 
 }
 
@@ -680,6 +683,30 @@ function storeInArray(root){
         }
      }
     return arrayData;
+}
+
+//Store data in the form of array and return for tree
+function storeInArrayTree(root){
+  let arrayData=[];
+  for(let i=0;i<500;i++){
+      arrayData[i]={
+       airportName:root[i]['Airport Name'],
+       aircraftMakeModel:root[i]['Aircraft Make Model'],
+       aircraftAirlineOperator:root[i]['Aircraft Airline Operator'],
+       costOther:root[i]['Cost Other'],
+       costRepair:root[i]['Cost Repair'],
+       costTotal:root[i]['Cost Total $'],
+       effectAmountofDamage:root[i]['Effect Amount of damage'],
+       flightDate:root[i]['Flight Date'],
+       originState:root[i]['Origin State'],
+       phaseOfFight:root[i]['Phase of flight'],
+       speedIASinKnots:root[i]['Speed IAS in knots'],
+       Timeofday:root[i]['Time of day'],
+       WildlifeSize:root[i]['Wildlife Size'],
+       WildlifeSpecies:root[i]['Wildlife Species']
+      }
+   }
+  return arrayData;
 }
 
 //Store on unique values(states,species size, Phase of flight) from array
