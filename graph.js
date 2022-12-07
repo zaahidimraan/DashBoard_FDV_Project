@@ -593,8 +593,8 @@ function TreeMapping(){
        
   let groups = d3v7.rollup(arrayData, // rollup function to group the data by any of the categorical properties
                        
-                      function(d) { return d.airportName; },
                       function(d) { return d.originState; },
+                      function(d) { return d.airportName; },
                       function(d) { return d.aircraftAirlineOperator; },
                       function(d) { return d.speedIASinKnots; },
                       );
@@ -656,18 +656,26 @@ function TreeMapping(){
 
     //for colors
     const temp=new Set();
+    const temp1=new Set();
     for(let i=0;i<arrayData.length;i++){
       temp.add(arrayData[i].aircraftAirlineOperator);
+      temp1.add(arrayData.airportName);
     }
     var keys=[];
+    var keys1=[];
     for(const element of temp){
       keys.push(element);
-      console.log(element);
+    }
+    for(const element of temp1){
+      keys1.push(element);
     }
     // Usually you have a color scale in your chart already
-    var color = d3v4.scaleOrdinal()
+    var color = d3v7.scaleOrdinal()
       .domain(keys)
       .range(d3.schemeSet1);
+    var color1 = d3v7.scaleOrdinal()
+      .domain(keys)
+      .range(d3.schemeSet2);
   
     const node = svg.append("g")
         .attr("fill", "#fff")
@@ -676,9 +684,9 @@ function TreeMapping(){
       .selectAll("circle")
       .data(nodes)
       .join("circle")
-        .attr("fill", d => d.height==1 ? color(d.data[0]) : (d.height==2?null:"#000"))
+        .attr("fill", d => d.height==1 ? color(d.data[0]) : (d.height==2?color1(d.data[0]):"#000"))
         .attr("stroke", d => d.children ? null : "#fff")
-        .attr("r", d => d.height==0 ? ((d.data[0]/100)*6) : 3.5)
+        .attr("r", d => d.height==0 ? ((d.data[0]/100)*6) : (d.height==2?9:3.5))
         .call(drag(simulation))
 
     node.append("title")
