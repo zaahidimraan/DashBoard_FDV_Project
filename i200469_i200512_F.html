@@ -42,33 +42,36 @@
   width:1680px;
   height:50px;
  }
- .slider p {
-  font-size:26px;
-  font-weight:600;
-  font-family: Open Sans;
-  padding-left:30px;
-  color:#7E6D57;
- }
- .slider input[type=”range”] {
-  -webkit-appearance:none !important;
-  width:420px;
-  height:2px;
-  background:#7E6D57;
-  border:none;
-  outline:none;
- }
- .slider input[type=”range”]::-webkit-slider-thumb {
-  -webkit-appearance:none !important;
-  width:30px;
-  height:30px;
-  background:#fcfcfc;
-  border:2px solid #7E6D57;
-  border-radius:50%;
-  cursor:pointer;
- }
- .slider input[type=”range”]::-webkit-slider-thumb:hover {
-  background:#7E6D57;
- }
+ .sliderR {
+  -webkit-appearance: none;
+  width: 40%;
+  height: 25px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.sliderR:hover {
+  opacity: 1;
+}
+
+.sliderR::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #04AA6D;
+  cursor: pointer;
+}
+
+.sliderR::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #04AA6D;
+  cursor: pointer;
+}
     </style>
     <script src="https://d3js.org/d3.v4.js"></script>
     <script>
@@ -112,9 +115,9 @@
     <!--Line for Month Selection-->    
     <div class="slider">
       <label for="sometext" style="font-size: 30px;">Month    </label>
-      <input type="range" min="1" max="12" value=""   id="sometext">
+      <input type="range" min="1" max="12" value=""   id="sometext" class="sliderR">
       <label for="sometext1" style="font-size: 30px;">Year</label>
-      <input type="range" min="1990" max="2002" value=""   id="sometext1">
+      <input type="range" min="1990" max="2002" value=""   id="sometext1" class="sliderR">
       <p id="rangeValue" style="font-size: 30px;">5/1991</p>
     </div>
     <!-- Create a div where the graph will take place for plots-->
