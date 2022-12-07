@@ -7,33 +7,38 @@
     <!-- Load d3.js -->
     <style>
 
+.AllDiv{
+  padding-left: 10px;
+  background:#f2ececb7;
+  border-radius:50px;
+  border-color: aqua;
+  box-shadow:5px 5px 5px #11101066;
+}
+
 .slider1 {
   margin: 40px 40x 40px 40px;
   padding-left: 90px;
   padding-bottom: 20px;
-  background:#fefdfddf;
+  background:#f2ececb7;
   border-radius:50px;
   display:flex;
   align-items:center;
-  box-shadow:5px 15px 10px #11101066;
   width:1680px;
   height:750px;
 
  }
- .slider2 {
-  display:flex;
-  align-items:center;
-
+ .slider3 {
+  width:1680px;
+  height:700px;
  }
       .slider {
   margin: 40px 40x 40px 40px;
   padding-bottom: 20px;
   padding-left: 90px;
-  background:#fefdfddf;
+  background:#f2ececb7;
   border-radius:50px;
   display:flex;
   align-items:center;
-  box-shadow:5px 15px 10px #11101066;
   width:1680px;
   height:50px;
  }
@@ -103,6 +108,7 @@
     <h4>Size :: Size of Species</h4>
     <h4>Color :: Phase of Flight</h4>
 
+  <div class="AllDiv">
     <!--Line for Month Selection-->    
     <div class="slider">
       <label for="sometext" style="font-size: 30px;">Month    </label>
@@ -116,12 +122,13 @@
       <div id="my_dataviz1"></div>
       <div id="my_dataviz2"></div>
     </div>
-    <div id="my_dataSpace3">
+    <div id="my_dataSpace3" class="slider3">
       <div id="my_dataviz4"></div>
     </div>
     <div id="my_dataSpace2" class="slider1">
       <div id="my_dataviz3"></div>
     </div>
+  </div>
 
 
    
