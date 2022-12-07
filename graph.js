@@ -49,7 +49,7 @@ function barPlotLoading(){
     arrayData=arrayData1;
    // set the dimensions and margins of the graph
    var margin = {top: 10, right: 30, bottom: 90, left: 40},
-    width = 1460 - margin.left - margin.right,
+    width = 1060 - margin.left - margin.right,
     height = 450 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
@@ -163,7 +163,7 @@ svg.selectAll("mydots")
   .data(keys)
   .enter()
   .append("rect")
-    .attr("x", 1550)
+    .attr("x", 1020)
     .attr("y", function(d,i){ return i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
     .attr("width", size)
     .attr("height", size)
@@ -174,7 +174,7 @@ svg.selectAll("mylabels")
   .data(keys)
   .enter()
   .append("text")
-    .attr("x", 1550 + size*1.2)
+    .attr("x", 1030 + size*1.2)
     .attr("y", function(d,i){ return i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
     .style("fill", function(d){ return color(d)})
     .text(function(d){ return d})
@@ -226,7 +226,7 @@ function scatterPlotLoading(){
     
     // set the dimensions and margins of the graph
    var margin = {top: 10, right: 30, bottom: 60, left: 60},
-   width = 1200 - margin.left - margin.right,
+   width = 900 - margin.left - margin.right,
    height = 700 - margin.top - margin.bottom;
 
   // append the svg object to the body of the page
@@ -342,8 +342,8 @@ svg.selectAll("mydots")
   .data(keys)
   .enter()
   .append("rect")
-    .attr("x", 1120)
-    .attr("y", function(d,i){ return 370 + i*(size+5)}) 
+    .attr("x", 730)
+    .attr("y", function(d,i){ return 470 + i*(size+5)}) 
     .attr("width", size)
     .attr("height", size)
     .style("fill", function(d){ return color(d)})
@@ -353,8 +353,8 @@ svg.selectAll("mylabels")
   .data(keys)
   .enter()
   .append("text")
-    .attr("x", 1010 + size*1.2)
-    .attr("y", function(d,i){ return 370 + i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("x", 733 + size*1.2)
+    .attr("y", function(d,i){ return 470 + i*(size+5) + (size/2)}) 
     .style("fill", function(d){ return color(d)})
     .text(function(d){ return d})
     .attr("text-anchor", "left")
@@ -421,19 +421,19 @@ function circularPlotLoading(){
   arrayData=arrayData1;
   console.log(arrayData);
   // set the dimensions and margins of the graph
-var width = 850
+var width = 650
 var height = 450
 
 // append the svg object to the body of the page
 var svg = d3.select("#my_dataviz2")
   .append("svg")
-    .attr("width", 1000)
+    .attr("width", 850)
     .attr("height", 450)
 
  // A scale that gives a X target position for each group
  var x = d3.scaleOrdinal()
   .domain(["Night", "Day","Dawn","Dusk"])
-  .range([50, 250,450,650])
+  .range([50, 200,350,450])
 
  // A color scale
  var color = d3.scaleOrdinal()
@@ -536,8 +536,8 @@ svg.selectAll("mydots")
   .data(keys)
   .enter()
   .append("rect")
-    .attr("x", 870)
-    .attr("y", function(d,i){ return 300 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("x", 670)
+    .attr("y", function(d,i){ return 350 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
     .attr("width", size)
     .attr("height", size)
     .style("fill", function(d){ return color(d)})
@@ -547,8 +547,8 @@ svg.selectAll("mylabels")
   .data(keys)
   .enter()
   .append("text")
-    .attr("x", 870 + size*1.2)
-    .attr("y", function(d,i){ return 300 + i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("x", 670 + size*1.2)
+    .attr("y", function(d,i){ return 350 + i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
     .style("fill", function(d){ return color(d)})
     .text(function(d){ return d})
     .attr("text-anchor", "left")
@@ -609,7 +609,7 @@ function TreeMapping(){
   root.sum(function(d) {
     return d[1];
    });
-  const height = 900,width=900;
+  const height = 900,width=1500;
     const links = root.links();
     const nodes = root.descendants();
 
@@ -645,7 +645,7 @@ function TreeMapping(){
         .force("y", d3v7.forceY());
   
     const svg = d3v7.create("svg")
-        .attr("viewBox", [-width / 2, -height / 2, width, height]);
+        .attr("viewBox", [-width / 2, -height/2, width, height]);
   
     const link = svg.append("g")
         .attr("stroke", "#999")
@@ -669,10 +669,12 @@ function TreeMapping(){
     for(const element of temp1){
       keys1.push(element);
     }
+
+
     // Usually you have a color scale in your chart already
     var color = d3v7.scaleOrdinal()
       .domain(keys)
-      .range(d3.schemeSet1);
+      .range(d3.schemeTableau10);
     var color1 = d3v7.scaleOrdinal()
       .domain(keys)
       .range(d3.schemeSet2);
@@ -703,6 +705,30 @@ function TreeMapping(){
           .attr("cx", d => d.x)
           .attr("cy", d => d.y);
     });
+
+
+var size = 10
+svg.selectAll("mydots")
+  .data(keys)
+  .enter()
+  .append("rect")
+    .attr("x", 240)
+    .attr("y", function(d,i){ return -420 + i*(size+5)}) 
+    .attr("width", size)
+    .attr("height", size)
+    .style("fill", function(d){ return color(d)})
+
+// Add one dot in the legend for each name.
+svg.selectAll("mylabels")
+  .data(keys)
+  .enter()
+  .append("text")
+    .attr("x", 250 + size*1.2)
+    .attr("y", function(d,i){ return -420 + i*(size+5) + (size/2)}) 
+    .style("fill", function(d){ return color(d)})
+    .text(function(d){ return d})
+    .attr("text-anchor", "left")
+    .style("alignment-baseline", "middle")
   
   
     $("#my_dataviz4").append(svg.node());
