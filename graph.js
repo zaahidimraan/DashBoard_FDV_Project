@@ -329,7 +329,6 @@ for(let i=0;i<arrayData.length;i++){
 var keys=[];
 for(const element of setPhaseofFlight){
   keys.push(element);
-  console.log(element);
 }
 // Usually you have a color scale in your chart already
 var color = d3v4.scaleOrdinal()
@@ -344,7 +343,7 @@ svg.selectAll("mydots")
   .enter()
   .append("rect")
     .attr("x", 1120)
-    .attr("y", function(d,i){ return 370 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("y", function(d,i){ return 370 + i*(size+5)}) 
     .attr("width", size)
     .attr("height", size)
     .style("fill", function(d){ return color(d)})
@@ -597,6 +596,7 @@ function TreeMapping(){
                       function(d) { return d.airportName; },
                       function(d) { return d.originState; },
                       function(d) { return d.aircraftAirlineOperator; },
+                      function(d) { return d.speedIASinKnots; },
                       );
                       
                       // There are several ways in which hierarchical data can be visualised including trees, 
@@ -653,6 +653,21 @@ function TreeMapping(){
       .selectAll("line")
       .data(links)
       .join("line");
+
+    //for colors
+    const temp=new Set();
+    for(let i=0;i<arrayData.length;i++){
+      temp.add(arrayData[i].aircraftAirlineOperator);
+    }
+    var keys=[];
+    for(const element of temp){
+      keys.push(element);
+      console.log(element);
+    }
+    // Usually you have a color scale in your chart already
+    var color = d3v4.scaleOrdinal()
+      .domain(keys)
+      .range(d3.schemeSet1);
   
     const node = svg.append("g")
         .attr("fill", "#fff")
@@ -661,10 +676,12 @@ function TreeMapping(){
       .selectAll("circle")
       .data(nodes)
       .join("circle")
-        .attr("fill", d => d.children ? null : "#000")
+        .attr("fill", d => d.height==1 ? color(d.data[0]) : (d.height==2?null:"#000"))
         .attr("stroke", d => d.children ? null : "#fff")
-        .attr("r", 3.5)
+        .attr("r", d => d.height==0 ? ((d.data[0]/100)*6) : 3.5)
         .call(drag(simulation));
+
+      console.log(nodes[0].children[0].data[0]);
   
     node.append("title")
         .text(d => d.data.name);
@@ -686,6 +703,7 @@ function TreeMapping(){
      console.log("Zahid");  
 
 }
+
 
 //Store data in the form of array and return
 function storeInArray(root){
@@ -789,10 +807,10 @@ check1.oninput=function(){
 }
 
 
-dataLoading();
-barPlotLoading();
-scatterPlotLoading();
-circularPlotLoading();
+//dataLoading();
+//barPlotLoading();
+//scatterPlotLoading();
+//circularPlotLoading();
 TreeMapping();
 
 
