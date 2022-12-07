@@ -679,10 +679,8 @@ function TreeMapping(){
         .attr("fill", d => d.height==1 ? color(d.data[0]) : (d.height==2?null:"#000"))
         .attr("stroke", d => d.children ? null : "#fff")
         .attr("r", d => d.height==0 ? ((d.data[0]/100)*6) : 3.5)
-        .call(drag(simulation));
+        .call(drag(simulation))
 
-      console.log(nodes[0].children[0].data[0]);
-  
     node.append("title")
         .text(d => d.data.name);
   
