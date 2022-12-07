@@ -609,7 +609,7 @@ function TreeMapping(){
   root.sum(function(d) {
     return d[1];
    });
-  const height = 600,width=600;
+  const height = 900,width=900;
     const links = root.links();
     const nodes = root.descendants();
 
@@ -807,10 +807,10 @@ check1.oninput=function(){
 }
 
 
-//dataLoading();
-//barPlotLoading();
-//scatterPlotLoading();
-//circularPlotLoading();
+dataLoading();
+barPlotLoading();
+scatterPlotLoading();
+circularPlotLoading();
 TreeMapping();
 
 
