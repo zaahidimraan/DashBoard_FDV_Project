@@ -1,5 +1,17 @@
 
 var data = await d3.csv("./birdstrikes.csv");
+
+//Use everywhere
+var colorArray = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', 
+'#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
+'#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A', 
+'#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC',
+'#66994D', '#B366CC', '#4D8000', '#B33300', '#CC80CC', 
+'#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
+'#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680', 
+'#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
+'#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3', 
+'#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
   
 //let clickme1= document.getElementById('clickmeQ1');
 function dataLoading(){
@@ -56,7 +68,7 @@ function barPlotLoading(){
 
 
 // append the svg object to the body of the page
-var svg = d3.select("#my_dataviz3")
+var svg = d3v7.select("#my_dataviz3")
   .append("svg")
     .attr("width", (width + margin.left + margin.right)+450)
     .attr("height", height + margin.top + margin.bottom)
@@ -65,59 +77,23 @@ var svg = d3.select("#my_dataviz3")
           "translate(" + margin.left + "," + margin.top + ")");
 
 // Barplot
-  var x = d3.scaleBand()
+  var x = d3v7.scaleBand()
    .range([ 0, width ])
    .domain(arrayData.map(function(d) { return (AxisVal==1?d.originState:(AxisVal==2?d.airportName:d.aircraftMakeModel)); }))
    .padding(0.2);
   svg.append("g")
    .attr("transform", "translate(0," + height + ")")
-   .call(d3.axisBottom(x))
+   .call(d3v7.axisBottom(x))
    .selectAll("text")
     .attr("transform", "translate(-10,0)rotate(-45)")
     .style("text-anchor", "end");
 
 // Add Y axis
-var y = d3.scaleLinear()
+var y = d3v7.scaleLinear()
   .domain([0, 300])
   .range([ height, 0]);
 svg.append("g")
-  .call(d3.axisLeft(y));
-
-
-
-  // create a tooltip
-  var Tooltip = d3.select("#my_dataviz3")
-    .append("div")
-    .style("opacity", 0)
-    .attr("class", "tooltip")
-    .style("background-color", "white")
-    .style("border", "solid")
-    .style("border-width", "2px")
-    .style("border-radius", "5px")
-    .style("padding", "5px")
-
-  // Three function that change the tooltip when user hover / move / leave a cell
-  var mouseover = function(d) {
-    Tooltip
-      .style("opacity", 1)
-    d3.select(this)
-      .style("stroke", "black")
-      .style("opacity", 1)
-  }
-  var mousemove = function(d) {
-    Tooltip
-    .html("State Name :: " + d.originState+"<br> Date       :: "+d.flightDate+"<br> Species Size :: "+d.WildlifeSize+"<br>Phase of Flight ::"+d.phaseOfFight+
-                      "<br>Speed:: "+d.speedIASinKnots+"<br>Model ::"+d.aircraftMakeModel+"<br>Aircraft Operator"+d.aircraftAirlineOperator)
-      .style("left", (d3.mouse(this)[0]+70) + "px")
-      .style("top", (d3.mouse(this)[1]) + "px")
-  }
-  var mouseleave = function(d) {
-    Tooltip
-      .style("opacity", 0)
-    d3.select(this)
-      .style("stroke", "none")
-      .style("opacity", 0.8)
-  }
+  .call(d3v7.axisLeft(y));
 
   const effectAmountofDamage=new Set();
   for(let i=0;i<arrayData.length;i++){
@@ -131,9 +107,13 @@ svg.append("g")
   // Usually you have a color scale in your chart already
   var color = d3v4.scaleOrdinal()
     .domain(keys)
-    .range(d3.schemeSet1);
+    .range(colorArray);
 
 
+//adding tool tip
+var div = d3v7.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
 
 // Bars
 svg.selectAll("mybar")
@@ -146,9 +126,20 @@ svg.selectAll("mybar")
     // no bar at the beginning thus:
     .attr("height", function(d) { return height - y(0); }) // always equal to 0
     .attr("y", function(d) { return y(0); })
-  .on("mouseover", mouseover)
-  .on("mousemove", mousemove)
-  .on("mouseleave", mouseleave)
+    .on("mouseover", function(event,d) {
+      div.transition()
+        .duration(200)
+        .style("opacity", .9);
+      div.html("State Name :: " + d.originState+"<br> Date       :: "+d.flightDate+"<br> Species Size :: "+d.WildlifeSize+"<br>Phase of Flight ::"+d.phaseOfFight+
+      "<br>Speed:: "+d.speedIASinKnots+"<br>Model ::"+d.aircraftMakeModel+"<br>Aircraft Operator"+d.aircraftAirlineOperator)
+        .style("left", (event.pageX) + "px")
+        .style("top", (event.pageY - 28) + "px");
+      })
+    .on("mouseout", function(d) {
+      div.transition()
+        .duration(500)
+        .style("opacity", 0);
+      });
 
 
 
@@ -311,7 +302,7 @@ for(const element of setPhaseofFlight){
 // Usually you have a color scale in your chart already
 var color = d3v4.scaleOrdinal()
   .domain(keys)
-  .range(d3.schemeSet1);
+  .range(colorArray);
 
 
 // Add one dot in the legend for each name.
@@ -362,7 +353,8 @@ scatter.selectAll("dot")
     div.transition()
       .duration(200)
       .style("opacity", .9);
-    div.html(d.flightDate + "<br/>" + d.airportName)
+    div.html("State Name :: " + d.originState+"<br> Date       :: "+d.flightDate+"<br> Species Size :: "+d.WildlifeSize+"<br>Phase of Flight ::"+d.phaseOfFight+
+    "<br>Speed:: "+d.speedIASinKnots+"<br>Model ::"+d.aircraftMakeModel+"<br>Aircraft Operator"+d.aircraftAirlineOperator)
       .style("left", (event.pageX) + "px")
       .style("top", (event.pageY - 28) + "px");
     })
@@ -416,6 +408,7 @@ function circularPlotLoading(){
 var width = 650
 var height = 450
 
+
 // append the svg object to the body of the page
 var svg = d3.select("#my_dataviz2")
   .append("svg")
@@ -431,6 +424,7 @@ var svg = d3.select("#my_dataviz2")
  var color = d3.scaleOrdinal()
   .domain(["Night", "Day","Dawn","Dusk"])
   .range([ "blue", "red","purple","green"])
+
 
  // Initialize the circle: all located at the center of the svg area
  var node = svg.append("g")
@@ -448,8 +442,7 @@ var svg = d3.select("#my_dataviz2")
     .call(d3.drag() // call specific function when circle is dragged
          .on("start", dragstarted)
          .on("drag", dragged)
-         .on("end", dragended));
-
+         .on("end", dragended))
  // Features of the forces applied to the nodes:
  var simulation = d3.forceSimulation()
     .force("x", d3.forceX().strength(6.5).x( function(d){ return x(d.Timeofday) } ))
@@ -517,8 +510,8 @@ for(const element of setTimeofday){
 }
 // Usually you have a color scale in your chart already
 var color = d3.scaleOrdinal()
- .domain(keys)
- .range(d3.schemeSet1);
+ .domain(["Night", "Day","Dawn","Dusk"])
+ .range([ "blue", "red","purple","green"]);
 
 
 
@@ -679,10 +672,10 @@ function TreeMapping(){
     // Usually you have a color scale in your chart already
     var color = d3v7.scaleOrdinal()
       .domain(keys)
-      .range(d3.schemeTableau10);
+      .range(colorArray);
     var color1 = d3v7.scaleOrdinal()
       .domain(keys1)
-      .range(d3.schemeSet2);
+      .range(colorArray);
   
     const node = svg.append("g")
         .attr("fill", "#fff")
