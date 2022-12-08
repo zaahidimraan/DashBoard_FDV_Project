@@ -53,6 +53,8 @@ function barPlotLoading(){
     width = 1060 - margin.left - margin.right,
     height = 450 - margin.top - margin.bottom;
 
+
+
 // append the svg object to the body of the page
 var svg = d3.select("#my_dataviz3")
   .append("svg")
@@ -231,11 +233,21 @@ function scatterPlotLoading(){
    width = 900 - margin.left - margin.right,
    height = 700 - margin.top - margin.bottom;
 
+  //Zoooming
+  let zoom = d3v7.zoom()
+    .on('zoom', handleZoom);
+
+  function handleZoom(e) {
+    d3v7.select('svg g')
+    .attr('transform', e.transform);
+  }
+
   // append the svg object to the body of the page
-  var svg = d3.select("#my_dataviz1")
+  var svg = d3v7.select("#my_dataviz1")
       .append("svg")
       .attr("width", width + margin.left )
       .attr("height", height + margin.top + margin.bottom)
+      .call(zoom)
       .append("g")
       .attr("transform",
            "translate(" + margin.left + "," + margin.top + ")");
@@ -251,26 +263,26 @@ function scatterPlotLoading(){
 
 
     // Add X axis
-    var x = d3.scaleBand()
+    var x = d3v7.scaleBand()
     .range([ 0, width ])
     .domain(arrayData.map(function(d) { return (AxisVal==1?d.originState:(AxisVal==2?d.airportName:d.aircraftMakeModel)); }))
     .padding(1);
 
    var xAxis=svg.append("g")
     .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x))
+    .call(d3v7.axisBottom(x))
     .selectAll("text")
      .attr("transform", "translate(-10,0)rotate(-45)")
      .style("text-anchor", "end")
 
 // Add Y axis
-   var y = d3.scaleBand()
+   var y = d3v7.scaleBand()
     .range([ height, 0 ])
     .domain(arrayData.map(function(d) { return d.flightDate;
                                      }))
     .padding(1);
    var yAxis=svg.append("g")
-    .call(d3.axisLeft(y).tickSize(-width*2.3).ticks(7))
+    .call(d3v7.axisLeft(y).tickSize(-width*2.3).ticks(7))
     .select(".domain").remove()
     .selectAll("text")
      .style("text-anchor", "end");
@@ -287,42 +299,6 @@ function scatterPlotLoading(){
      // Customization
   svg.selectAll(".tick line").attr("stroke", "#000000")
                              .style("opacity", .2)
-                             
-   // Add a tooltip div.
-// Its opacity is set to 0: we don't see it by default.
-  var tooltip = d3.select("#my_dataviz1")
-   .append("div")
-   .style("opacity", 0)
-   .attr("class", "tooltip")
-   .style("background-color", "white")
-   .style("border", "solid")
-   .style("border-width", "1px")
-   .style("border-radius", "5px")
-   .style("padding", "10px")
-
-
-
-// A function that change this tooltip when the user hover a point.
-// Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
-  var mouseover = function(d) {
-   tooltip
-    .style("opacity", 1)
-  }
-
-  var mousemove = function(d) {
-   tooltip
-    .html("State Name :: " + d.originState+"<br> Date       :: "+d.flightDate+"<br> Species Size :: "+d.WildlifeSize+"<br>Phase of Flight ::"+d.phaseOfFight)
-    .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-    .style("top", (d3.mouse(this)[1]) + "px")
-  }
-
-  // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
-  var mouseleave = function(d) {
-   tooltip
-     .transition()
-     .duration(200)
-     .style("opacity", 0)
-   }
 
 const setPhaseofFlight=new Set();
 for(let i=0;i<arrayData.length;i++){
@@ -363,8 +339,11 @@ svg.selectAll("mylabels")
     .style("alignment-baseline", "middle")
 
 
+//adding tool tip
+var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
 // Add dots
-
 // Create the scatter variable: where both the circles and the brush take place
 var scatter = svg.append('g')
   .attr("clip-path", "url(#clip)")
@@ -379,9 +358,19 @@ scatter.selectAll("dot")
   .style("fill", function(d){ return color(d.phaseOfFight)})
   .style("opacity", function(d){ return (d.WildlifeSize=='Large'?.3:(d.WildlifeSize=='Medium'?.6:.9))})
   .style("stroke", "white")
-.on("mouseover", mouseover )
-.on("mousemove", mousemove )
-.on("mouseleave", mouseleave )
+  .on("mouseover", function(event,d) {
+    div.transition()
+      .duration(200)
+      .style("opacity", .9);
+    div.html(d.flightDate + "<br/>" + d.airportName)
+      .style("left", (event.pageX) + "px")
+      .style("top", (event.pageY - 28) + "px");
+    })
+  .on("mouseout", function(d) {
+    div.transition()
+      .duration(500)
+      .style("opacity", 0);
+    });
 
 
 }
@@ -647,9 +636,11 @@ function TreeMapping(){
         .force("charge", d3v7.forceManyBody().strength(-50))
         .force("x", d3v7.forceX())
         .force("y", d3v7.forceY());
+
   
     const svg = d3v7.create("svg")
-        .attr("viewBox", [-width / 2, -height/2, width, height]);
+        .attr("viewBox", [-width / 2, -height/2, width, height])
+        
   
     const link = svg.append("g")
         .attr("stroke", "#999")
@@ -798,7 +789,6 @@ svg.selectAll("mylabels1")
      console.log("Zahid");  
 
 }
-
 
 //Store data in the form of array and return
 function storeInArray(root){
