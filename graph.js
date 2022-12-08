@@ -745,6 +745,31 @@ svg.selectAll("mylabels")
     .attr("text-anchor", "left")
     .style("alignment-baseline", "middle")
 
+let rootChild="",childChild="";
+if(AxisVal==1){
+  rootChild="Origin State";
+  childChild="AirCraftModel";
+}else if(AxisVal==2){
+  rootChild="Airport Name";
+  childChild="AirCraftModel";
+}else if(AxisVal==3){
+  rootChild="AirCraftModel";
+  childChild="Airport Name";
+}
+
+// Add one dot in the legend for each name.
+var keys3=[["Hierarchy From Parent to Child :: "],["Root"],[rootChild],[childChild],["Speed"]];
+svg.selectAll("mylabels2")
+  .data(keys3)
+  .enter()
+  .append("text")
+    .attr("x", function(d,i){ return -320 + i*(size+5) + (size/2)})
+    .attr("y", function(d,i){ return -420 + i*(size+5) + (size/2)}) 
+    .style("fill", function(d){ return color1(d)})
+    .text(function(d){ return d})
+    .attr("text-anchor", "left")
+    .style("alignment-baseline", "middle")
+
 //Legends for Airport
 svg.selectAll("mydots1")
   .data(keys1)
