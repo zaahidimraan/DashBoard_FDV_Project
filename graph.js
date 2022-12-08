@@ -66,15 +66,24 @@ function barPlotLoading(){
     height = 450 - margin.top - margin.bottom;
 
 
+//Zoooming
+let zoom = d3v7.zoom()
+.on('zoom', handleZoom);
 
+function handleZoom(e) {
+svg
+.attr('transform', e.transform);
+}
 // append the svg object to the body of the page
 var svg = d3v7.select("#my_dataviz3")
   .append("svg")
     .attr("width", (width + margin.left + margin.right)+450)
     .attr("height", height + margin.top + margin.bottom)
+    .call(zoom)
   .append("g")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
+
 
 // Barplot
   var x = d3v7.scaleBand()
@@ -229,7 +238,7 @@ function scatterPlotLoading(){
     .on('zoom', handleZoom);
 
   function handleZoom(e) {
-    d3v7.select('svg g')
+    svg
     .attr('transform', e.transform);
   }
 
@@ -630,9 +639,17 @@ function TreeMapping(){
         .force("x", d3v7.forceX())
         .force("y", d3v7.forceY());
 
-  
+    //Zoooming
+  let zoom = d3v7.zoom()
+     .on('zoom', handleZoom);
+
+   function handleZoom(e) {   
+    svg
+     .attr('transform', e.transform);
+    }
     const svg = d3v7.create("svg")
         .attr("viewBox", [-width / 2, -height/2, width, height])
+        .call(zoom)
         
   
     const link = svg.append("g")
