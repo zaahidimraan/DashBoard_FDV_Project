@@ -693,6 +693,10 @@ function TreeMapping(){
     var color1 = d3v7.scaleOrdinal()
       .domain(keys1)
       .range(colorArray);
+
+    var div = d3.select("body").append("div")
+      .attr("class", "tooltipTree")
+      .style("opacity", 0);
   
     const node = svg.append("g")
         .attr("fill", "#fff")
@@ -705,6 +709,19 @@ function TreeMapping(){
         .attr("stroke", d => d.children ? null : "#fff")
         .attr("r", d => d.height==0 ? ((d.data[0]/100)*6) : (d.height==2?9:3.5))
         .call(drag(simulation))
+        .on("mouseover", function(event,d) {
+          div.transition()
+            .duration(200)
+            .style("opacity", .9);
+          div.html(d.data[0])
+            .style("left", (event.pageX) + "px")
+            .style("top", (event.pageY - 28) + "px");
+          })
+        .on("mouseout", function(d) {
+          div.transition()
+            .duration(500)
+            .style("opacity", 0);
+          });
 
     node.append("title")
         .text(d => d.data.name);
