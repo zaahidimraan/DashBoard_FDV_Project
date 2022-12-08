@@ -22,6 +22,7 @@ function barPlotLoading(){
     let arrayData1=[]
     let value=document.getElementById("sometext").value;
     let year=document.getElementById("sometext1").value;
+    let AxisVal=document.getElementById("sometext2").value;
     for(let i=0,j=0;i<arrayData.length;i++){
       let length=arrayData[i].flightDate.length;
       length=length-1;
@@ -64,7 +65,7 @@ var svg = d3.select("#my_dataviz3")
 // Barplot
   var x = d3.scaleBand()
    .range([ 0, width ])
-   .domain(arrayData.map(function(d) { return d.aircraftMakeModel; }))
+   .domain(arrayData.map(function(d) { return (AxisVal==1?d.originState:(AxisVal==2?d.airportName:d.aircraftMakeModel)); }))
    .padding(0.2);
   svg.append("g")
    .attr("transform", "translate(0," + height + ")")
@@ -118,7 +119,7 @@ svg.append("g")
 
   const effectAmountofDamage=new Set();
   for(let i=0;i<arrayData.length;i++){
-    effectAmountofDamage.add(arrayData[i].aircraftAirlineOperator);
+    effectAmountofDamage.add(arrayData[i].WildlifeSpecies);
   }
   var keys=[];
   for(const element of effectAmountofDamage){
@@ -137,9 +138,9 @@ svg.selectAll("mybar")
   .data(arrayData)
   .enter()
   .append("rect")
-    .attr("x", function(d) { return x(d.aircraftMakeModel); })
+    .attr("x", function(d) { return x((AxisVal==1?d.originState:(AxisVal==2?d.airportName:d.aircraftMakeModel))); })
     .attr("width", x.bandwidth())
-    .attr("fill", function(d){ return color(d.aircraftAirlineOperator)})
+    .attr("fill", function(d){ return color(d.WildlifeSpecies)})
     // no bar at the beginning thus:
     .attr("height", function(d) { return height - y(0); }) // always equal to 0
     .attr("y", function(d) { return y(0); })
@@ -198,6 +199,7 @@ function scatterPlotLoading(){
     let arrayData1=[]
     let value=document.getElementById("sometext").value;
     let year=document.getElementById("sometext1").value;
+    let AxisVal=document.getElementById("sometext2").value;
     for(let i=0,j=0;i<arrayData.length;i++){
       let length=arrayData[i].flightDate.length;
       length=length-1;
@@ -251,7 +253,7 @@ function scatterPlotLoading(){
     // Add X axis
     var x = d3.scaleBand()
     .range([ 0, width ])
-    .domain(arrayData.map(function(d) { return d.originState; }))
+    .domain(arrayData.map(function(d) { return (AxisVal==1?d.originState:(AxisVal==2?d.airportName:d.aircraftMakeModel)); }))
     .padding(1);
 
    var xAxis=svg.append("g")
@@ -371,7 +373,7 @@ scatter.selectAll("dot")
 .data(arrayData) 
 .enter()
 .append("circle")
-  .attr("cx", function (d) { return x(d.originState); } )
+  .attr("cx", function (d) { return x((AxisVal==1?d.originState:(AxisVal==2?d.airportName:d.aircraftMakeModel))); } )
   .attr("cy", function (d) { return y(d.flightDate); } )
   .attr("r", function(d){ return (d.WildlifeSize=='Large'?15:(d.WildlifeSize=='Medium'?7:2))})
   .style("fill", function(d){ return color(d.phaseOfFight)})
@@ -394,6 +396,7 @@ function circularPlotLoading(){
   let arrayData1=[];
   let value=document.getElementById("sometext").value;
   let year=document.getElementById("sometext1").value;
+  let AxisVal=document.getElementById("sometext2").value;
   for(let i=0,j=0;i<arrayData.length;i++){
     let length=arrayData[i].flightDate.length;
     length=length-1;
@@ -564,6 +567,7 @@ function TreeMapping(){
   let arrayData1=[];
   let value=document.getElementById("sometext").value;
   let year=document.getElementById("sometext1").value;
+  let AxisVal=document.getElementById("sometext2").value;
   for(let i=0,j=0;i<arrayData.length;i++){
     let length=arrayData[i].flightDate.length;
     length=length-1;
@@ -593,9 +597,9 @@ function TreeMapping(){
        
   let groups = d3v7.rollup(arrayData, // rollup function to group the data by any of the categorical properties
                        
-                      function(d) { return d.originState; },
-                      function(d) { return d.airportName; },
-                      function(d) { return d.aircraftAirlineOperator; },
+                      function(d) { return (AxisVal==1?d.airportName:(AxisVal==2?d.originState:d.aircraftAirlineOperator)); },
+                      function(d) { return (AxisVal==1?d.originState:(AxisVal==2?d.airportName:d.aircraftMakeModel)); },
+                      function(d) { return (AxisVal==1?d.aircraftMakeModel:(AxisVal==2?d.aircraftMakeModel:d.airportName)); },
                       function(d) { return d.speedIASinKnots; },
                       );
                       
@@ -658,8 +662,18 @@ function TreeMapping(){
     const temp=new Set();
     const temp1=new Set();
     for(let i=0;i<arrayData.length;i++){
-      temp.add(arrayData[i].aircraftAirlineOperator);
-      temp1.add(arrayData.airportName);
+      if(AxisVal==2){
+      temp.add(arrayData[i].aircraftMakeModel);
+      temp1.add(arrayData[i].airportName);
+      }
+      else if(AxisVal==1){
+        temp.add(arrayData[i].aircraftMakeModel);
+        temp1.add(arrayData[i].originState);
+      }
+      else{
+        temp.add(arrayData[i].airportName);
+        temp1.add(arrayData[i].aircraftMakeModel);
+      }
     }
     var keys=[];
     var keys1=[];
@@ -676,7 +690,7 @@ function TreeMapping(){
       .domain(keys)
       .range(d3.schemeTableau10);
     var color1 = d3v7.scaleOrdinal()
-      .domain(keys)
+      .domain(keys1)
       .range(d3.schemeSet2);
   
     const node = svg.append("g")
@@ -733,7 +747,7 @@ svg.selectAll("mylabels")
 
 //Legends for Airport
 svg.selectAll("mydots1")
-  .data(keys)
+  .data(keys1)
   .enter()
   .append("rect")
     .attr("x", 230)
@@ -744,7 +758,7 @@ svg.selectAll("mydots1")
 
 // Add one dot in the legend for each name.
 svg.selectAll("mylabels1")
-  .data(keys)
+  .data(keys1)
   .enter()
   .append("text")
     .attr("x", 240 + size*1.2)
@@ -848,6 +862,24 @@ let check1= document.getElementById('sometext1');
 check1.oninput=function(){
   let val=document.getElementById("sometext").value+"/"+document.getElementById("sometext1").value;
   document.getElementById("rangeValue").innerHTML=val;
+  $("#my_dataviz1").remove();
+  $("#my_dataviz2").remove();
+  $("#my_dataviz3").remove();
+  $("#my_dataviz4").remove();
+  $("#my_dataSpace1").append("<div id=\"my_dataviz1\"></div>"); 
+  $("#my_dataSpace1").append("<div id=\"my_dataviz2\"></div>");
+  $("#my_dataSpace2").append("<div id=\"my_dataviz3\"></div>");
+  $("#my_dataSpace3").append("<div id=\"my_dataviz4\"></div>");
+  scatterPlotLoading();
+  circularPlotLoading();
+  barPlotLoading();
+  TreeMapping();
+}
+
+let check2= document.getElementById('sometext2');
+check2.oninput=function(){
+  let val=document.getElementById("sometext2").value;
+  document.getElementById("rangeValue1").innerHTML=(val==1?"Origin State":(val==2?"Airport Name":"AirCraft Model"));
   $("#my_dataviz1").remove();
   $("#my_dataviz2").remove();
   $("#my_dataviz3").remove();

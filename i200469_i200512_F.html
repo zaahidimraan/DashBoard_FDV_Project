@@ -112,7 +112,7 @@
     <h4>Color :: Phase of Flight</h4>
 
   <div class="AllDiv">
-    <!--Line for Month Selection-->    
+    <!--Line for Month/Year/Other Atributes Selection-->    
     <div class="slider">
       <label for="sometext" style="font-size: 30px;">Month    </label>
       <input type="range" min="1" max="12" value=""   id="sometext" class="sliderR">
@@ -120,6 +120,13 @@
       <input type="range" min="1990" max="2002" value=""   id="sometext1" class="sliderR">
       <p id="rangeValue" style="font-size: 30px;">5/1991</p>
     </div>
+    <div class="AllDiv">
+      <!--Line for Month/Year/Other Atributes Selection-->    
+      <div class="slider">
+        <label for="sometext2" style="font-size: 30px;">Select Graph Axis (1.State State/2. AirportName/3. AircraftModel)    </label>
+        <input id="sometext2" type="range" value="2" min="1" max="3" class="sliderR">
+        <p id="rangeValue1" style="font-size: 30px;">AirportName</p>
+      </div>
     <!-- Create a div where the graph will take place for plots-->
     <div id="my_dataSpace1" class="slider1">
       <div id="my_dataviz1"></div>
